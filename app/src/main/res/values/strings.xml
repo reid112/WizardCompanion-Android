@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Wizard Companion</string>
+
+    <string name="screen_title_home">Wizard Companion</string>
+    <string name="screen_title_past_games">Past Games</string>
+    <string name="screen_title_settings">Settings</string>
+    <string name="screen_title_score">Score</string>
+    <string name="screen_title_game_details">Game Details</string>
+
+    <string name="bottom_bar_home">Home</string>
+    <string name="bottom_bar_past_games">Past Games</string>
+    <string name="bottom_bar_settings">Settings</string>
+
+    <string name="label_play_now">Play Now</string>
+    <string name="label_start_game">Want to start a new game?</string>
+    <string name="label_resume_game">Resume Game</string>
+    <string name="label_game_in_progress">It looks like you have a game in progress.  Would you like to resume this game?</string>
+    <string name="label_rules">Rules</string>
+
+    <string name="button_new_game">New Game</string>
+    <string name="button_resume_game">Resume Game</string>
+</resources>
