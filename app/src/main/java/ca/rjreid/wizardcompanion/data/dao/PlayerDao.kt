@@ -2,10 +2,10 @@ package ca.rjreid.wizardcompanion.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import ca.rjreid.wizardcompanion.data.models.Player
+import ca.rjreid.wizardcompanion.data.entities.Player
 
 @Dao
 interface PlayerDao {
     @Insert
-    suspend fun insertPlayer(player: Player)
+    suspend fun insertPlayers(players: List<Player>)
 }

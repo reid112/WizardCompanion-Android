@@ -3,14 +3,14 @@ package ca.rjreid.wizardcompanion.data
 import ca.rjreid.wizardcompanion.data.dao.GameDao
 import ca.rjreid.wizardcompanion.data.dao.PlayerDao
 import ca.rjreid.wizardcompanion.data.dao.RoundDao
-import ca.rjreid.wizardcompanion.data.models.Game
-import ca.rjreid.wizardcompanion.data.models.Player
-import ca.rjreid.wizardcompanion.data.models.Round
+import ca.rjreid.wizardcompanion.data.entities.Game
+import ca.rjreid.wizardcompanion.data.entities.Player
+import ca.rjreid.wizardcompanion.data.entities.Round
 import kotlinx.coroutines.flow.Flow
 
 interface WizardRepository {
     //region Player
-    suspend fun insertPlayer(player: Player)
+    suspend fun insertPlayers(players: List<Player>)
     //endregion
 
     //region Round
@@ -32,8 +32,8 @@ class WizardRepositoryImpl(
     private val gameDao: GameDao
 ) : WizardRepository {
     //region Player
-    override suspend fun insertPlayer(player: Player) {
-        playerDao.insertPlayer(player)
+    override suspend fun insertPlayers(players: List<Player>) {
+        playerDao.insertPlayers(players)
     }
     //endregion
 

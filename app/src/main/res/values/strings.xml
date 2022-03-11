@@ -4,6 +4,7 @@
     <string name="screen_title_home">Wizard Companion</string>
     <string name="screen_title_past_games">Past Games</string>
     <string name="screen_title_settings">Settings</string>
+    <string name="screen_title_enter_players">Enter Players</string>
     <string name="screen_title_score">Score</string>
     <string name="screen_title_game_details">Game Details</string>
 

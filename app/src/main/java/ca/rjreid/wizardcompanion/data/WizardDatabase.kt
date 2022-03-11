@@ -6,10 +6,10 @@ import androidx.room.TypeConverters
 import ca.rjreid.wizardcompanion.data.dao.GameDao
 import ca.rjreid.wizardcompanion.data.dao.PlayerDao
 import ca.rjreid.wizardcompanion.data.dao.RoundDao
-import ca.rjreid.wizardcompanion.data.models.Game
-import ca.rjreid.wizardcompanion.data.models.Player
-import ca.rjreid.wizardcompanion.data.models.PlayerRound
-import ca.rjreid.wizardcompanion.data.models.Round
+import ca.rjreid.wizardcompanion.data.entities.Game
+import ca.rjreid.wizardcompanion.data.entities.Player
+import ca.rjreid.wizardcompanion.data.entities.PlayerRound
+import ca.rjreid.wizardcompanion.data.entities.Round
 import ca.rjreid.wizardcompanion.data.utils.Converters
 
 @Database(

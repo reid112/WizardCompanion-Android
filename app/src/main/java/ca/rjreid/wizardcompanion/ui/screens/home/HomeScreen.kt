@@ -5,18 +5,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
-import ca.rjreid.wizardcompanion.ui.bottomsheets.startnewgame.StartNewGameBottomSheet
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 //region Composables
 @OptIn(ExperimentalMaterialApi::class)
@@ -25,58 +23,37 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onNavigate: (String) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
-    val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    var bottomSheetType: BottomSheetType? by remember { mutableStateOf(null) }
-
     val uiState = viewModel.uiState
 
     LaunchedEffect(key1 = true) {
         viewModel.actions.collect { action ->
             when(action) {
                 is Action.Navigate -> onNavigate(action.route)
-                is Action.ShowBottomSheet -> {
-                    bottomSheetType = action.sheet
-                    coroutineScope.launch { bottomSheetState.show() }
-                }
             }
         }
     }
 
-    ModalBottomSheetLayout(
-        sheetState = bottomSheetState,
-        sheetContent = {
-            Spacer(modifier = Modifier.height(1.dp))
-            bottomSheetType?.let { type ->
-                BottomSheet(
-                    type = type,
-                    onStartGameClicked = { viewModel.onEvent(UiEvent.OnStartGameClicked(it)) }
-                )
-            }
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+            .padding(horizontal = MaterialTheme.spacing.medium)
+            .verticalScroll(state = scrollState),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-                .padding(horizontal = MaterialTheme.spacing.medium)
-                .verticalScroll(state = scrollState),
-        ) {
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-            if (uiState.resumeGameCardVisible) {
-                ResumeGameCard(modifier = Modifier.fillMaxWidth()) {
-                    viewModel.onEvent(UiEvent.OnResumeGameClicked)
-                }
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        if (uiState.resumeGameCardVisible) {
+            ResumeGameCard(modifier = Modifier.fillMaxWidth()) {
+                viewModel.onEvent(UiEvent.OnResumeGameClicked)
             }
-            PlayNowCard(modifier = Modifier.fillMaxWidth()) {
-                viewModel.onEvent(UiEvent.OnNewGameClicked)
-            }
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-            RulesCard(modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         }
+        PlayNowCard(modifier = Modifier.fillMaxWidth()) {
+            viewModel.onEvent(UiEvent.OnNewGameClicked)
+        }
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        RulesCard(modifier = Modifier.fillMaxWidth())
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
     }
 }
 
@@ -151,19 +128,6 @@ fun RulesCard(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.body2
             )
         }
-    }
-}
-
-@Composable
-fun BottomSheet(
-    type: BottomSheetType,
-    onStartGameClicked: (playerNames: List<String>) -> Unit
-) {
-    when (type) {
-        is BottomSheetType.StartNewGame -> {
-            StartNewGameBottomSheet(onStartGameClicked = onStartGameClicked)
-        }
-        // Add any other types of bottom sheets here
     }
 }
 //endregion

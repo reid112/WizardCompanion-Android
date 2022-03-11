@@ -38,6 +38,7 @@ fun BottomNavBar(modifier: Modifier = Modifier, navController: NavController) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     bottomBarState = when (currentRoute) {
+        Screen.EnterPlayers.route,
         Screen.Score.route,
         Screen.GameDetails.route -> false
         else -> true

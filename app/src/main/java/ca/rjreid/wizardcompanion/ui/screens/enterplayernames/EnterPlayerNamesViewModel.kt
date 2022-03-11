@@ -1,11 +1,19 @@
-package ca.rjreid.wizardcompanion.ui.bottomsheets.startnewgame
+package ca.rjreid.wizardcompanion.ui.screens.enterplayernames
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import ca.rjreid.wizardcompanion.data.ScoreManager
+import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
+import ca.rjreid.wizardcompanion.util.MIN_PLAYER_COUNT
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class StartNewGameBottomSheetViewModel: ViewModel() {
+@HiltViewModel
+class EnterPlayerNamesViewModel @Inject constructor(
+    private val scoreManager: ScoreManager
+) : ViewModel() {
     //region Variables
     var uiState by mutableStateOf(UiState())
         private set
@@ -20,6 +28,9 @@ class StartNewGameBottomSheetViewModel: ViewModel() {
             is UiEvent.OnAddPlayerClicked -> {
                 addEmptyPlayer()
             }
+            is UiEvent.OnStartGameClick -> {
+                startGame()
+            }
         }
     }
     //endregion
@@ -29,12 +40,25 @@ class StartNewGameBottomSheetViewModel: ViewModel() {
         val players = uiState.players.toMutableList()
         players[index] = player
         uiState = uiState.copy(players = players)
+
+        setStartGameButtonState()
+    }
+
+    private fun setStartGameButtonState() {
+        val isButtonEnabled = uiState.players.filter { it.isNotBlank() }.count() >= MIN_PLAYER_COUNT
+        uiState = uiState.copy(startGameButtonEnabled = isButtonEnabled)
     }
 
     private fun addEmptyPlayer() {
+        if (uiState.players.count() >= MAX_PLAYER_COUNT) return
+
         val players = uiState.players.toMutableList()
         players.add("")
         uiState = uiState.copy(players = players)
+    }
+
+    private fun startGame() {
+        scoreManager.startNewGame(uiState.players)
     }
     //endregion
 }

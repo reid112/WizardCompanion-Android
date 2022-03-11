@@ -29,15 +29,10 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: UiEvent) {
         when (event) {
             is UiEvent.OnNewGameClicked -> {
-                sendAction(Action.ShowBottomSheet(BottomSheetType.StartNewGame))
+                sendAction(Action.Navigate(Screen.EnterPlayers.route))
             }
             is UiEvent.OnResumeGameClicked -> {
                 sendAction(Action.Navigate(Screen.Score.route))
-//                uiState = uiState.copy(resumeGameCardVisible = false)
-            }
-            is UiEvent.OnStartGameClicked -> {
-                val players = event.players.filter { it.isNotEmpty() }
-                println(players)
             }
         }
     }

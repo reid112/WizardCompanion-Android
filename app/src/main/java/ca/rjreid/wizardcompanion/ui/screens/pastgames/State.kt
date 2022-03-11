@@ -1,7 +1,7 @@
 package ca.rjreid.wizardcompanion.ui.screens.pastgames
 
-import ca.rjreid.wizardcompanion.data.models.Game
-import ca.rjreid.wizardcompanion.data.models.Round
+import ca.rjreid.wizardcompanion.data.entities.Game
+import ca.rjreid.wizardcompanion.data.entities.Round
 
 data class UiState(
     var pastGames: Map<Game, List<Round>> = emptyMap()

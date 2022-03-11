@@ -1,13 +1,10 @@
 package ca.rjreid.wizardcompanion.ui.components
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import ca.rjreid.wizardcompanion.ui.screens.enterplayernames.EnterPlayerNamesScreen
 import ca.rjreid.wizardcompanion.ui.screens.gamedetails.GameDetailsScreen
 import ca.rjreid.wizardcompanion.ui.screens.home.HomeScreen
 import ca.rjreid.wizardcompanion.ui.screens.pastgames.PastGamesScreen
@@ -37,36 +34,53 @@ fun NavigationGraph(
                 SettingsScreen()
             }
             composable(
+                route = Screen.EnterPlayers.route,
+//                enterTransition = {
+//                    slideInVertically(
+//                        initialOffsetY = { it },
+//                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+//                    )
+//                },
+//                popExitTransition = {
+//                    slideOutVertically(
+//                        targetOffsetY = { it },
+//                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+//                    )
+//                }
+            ) {
+                EnterPlayerNamesScreen()
+            }
+            composable(
                 route = Screen.Score.route,
-                enterTransition = {
-                    slideInVertically(
-                        initialOffsetY = { it },
-                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
-                    )
-                },
-                popExitTransition = {
-                    slideOutVertically(
-                        targetOffsetY = { it },
-                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
-                    )
-                }
+//                enterTransition = {
+//                    slideInVertically(
+//                        initialOffsetY = { it },
+//                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+//                    )
+//                },
+//                popExitTransition = {
+//                    slideOutVertically(
+//                        targetOffsetY = { it },
+//                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+//                    )
+//                }
             ) {
                 ScoreScreen()
             }
             composable(
                 route = Screen.GameDetails.route,
-                enterTransition = {
-                    slideInVertically(
-                        initialOffsetY = { -it },
-                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
-                    )
-                },
-                popExitTransition = {
-                    slideOutVertically(
-                        targetOffsetY = { it },
-                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
-                    )
-                }
+//                enterTransition = {
+//                    slideInVertically(
+//                        initialOffsetY = { -it },
+//                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+//                    )
+//                },
+//                popExitTransition = {
+//                    slideOutVertically(
+//                        targetOffsetY = { it },
+//                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+//                    )
+//                }
             ) {
                 GameDetailsScreen()
             }

@@ -3,7 +3,7 @@ package ca.rjreid.wizardcompanion.data.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import ca.rjreid.wizardcompanion.data.models.Round
+import ca.rjreid.wizardcompanion.data.entities.Round
 
 @Dao
 interface RoundDao {

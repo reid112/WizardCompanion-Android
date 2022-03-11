@@ -2,9 +2,7 @@ package ca.rjreid.wizardcompanion.di
 
 import android.app.Application
 import androidx.room.Room
-import ca.rjreid.wizardcompanion.data.WizardDatabase
-import ca.rjreid.wizardcompanion.data.WizardRepository
-import ca.rjreid.wizardcompanion.data.WizardRepositoryImpl
+import ca.rjreid.wizardcompanion.data.*
 import ca.rjreid.wizardcompanion.util.WIZARD_DATABASE_NAME
 import dagger.Module
 import dagger.Provides
@@ -28,7 +26,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWizardRepository(db:WizardDatabase): WizardRepository {
+    fun provideWizardRepository(db: WizardDatabase): WizardRepository {
         return WizardRepositoryImpl(db.playerDao, db.roundDao, db.gameDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScoreManager(repository: WizardRepository): ScoreManager {
+        return ScoreManagerImpl(repository = repository)
     }
 }

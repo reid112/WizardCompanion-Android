@@ -6,15 +6,9 @@ data class UiState(
 
 sealed class Action {
     data class Navigate(val route: String): Action()
-    data class ShowBottomSheet(val sheet: BottomSheetType): Action()
 }
 
 sealed class UiEvent {
     object OnNewGameClicked: UiEvent()
     object OnResumeGameClicked: UiEvent()
-    data class OnStartGameClicked(val players: List<String>): UiEvent()
-}
-
-sealed class BottomSheetType {
-    object StartNewGame: BottomSheetType()
 }
