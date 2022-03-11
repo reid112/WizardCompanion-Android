@@ -4,14 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -20,19 +19,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import ca.rjreid.wizardcompanion.ui.components.BottomNavBar
 import ca.rjreid.wizardcompanion.ui.components.NavigationGraph
 import ca.rjreid.wizardcompanion.ui.components.TopAppBar
-import ca.rjreid.wizardcompanion.ui.screens.home.HomeScreen
-import ca.rjreid.wizardcompanion.ui.screens.pastgames.PastGamesScreen
-import ca.rjreid.wizardcompanion.ui.screens.settings.SettingsScreen
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
-import ca.rjreid.wizardcompanion.util.Screen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
+import ca.rjreid.wizardcompanion.util.BOTTOM_BAR_HEIGHT
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
@@ -53,7 +44,7 @@ class MainActivity : ComponentActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun App() {
-    val bottomBarHeight = 60.dp
+    val bottomBarHeight = BOTTOM_BAR_HEIGHT
     val bottomBarHeightPx = with(LocalDensity.current) { bottomBarHeight.roundToPx().toFloat() }
     val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
 

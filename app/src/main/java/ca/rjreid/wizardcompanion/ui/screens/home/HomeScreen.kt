@@ -1,20 +1,18 @@
 package ca.rjreid.wizardcompanion.ui.screens.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.ui.bottomsheets.startnewgame.StartNewGameBottomSheet
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
 import kotlinx.coroutines.flow.collect
@@ -50,8 +48,11 @@ fun HomeScreen(
         sheetState = bottomSheetState,
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
-            bottomSheetType?.let {
-                BottomSheet(it)
+            bottomSheetType?.let { type ->
+                BottomSheet(
+                    type = type,
+                    onStartGameClicked = { viewModel.onEvent(UiEvent.OnStartGameClicked(it)) }
+                )
             }
         }
     ) {
@@ -149,380 +150,20 @@ fun RulesCard(modifier: Modifier = Modifier) {
                 text = "Rules will go here",
                 style = MaterialTheme.typography.body2
             )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
         }
     }
 }
 
 @Composable
-fun BottomSheet(type: BottomSheetType) {
+fun BottomSheet(
+    type: BottomSheetType,
+    onStartGameClicked: (playerNames: List<String>) -> Unit
+) {
     when (type) {
         is BottomSheetType.StartNewGame -> {
-            StartNewGameBottomSheet()
+            StartNewGameBottomSheet(onStartGameClicked = onStartGameClicked)
         }
         // Add any other types of bottom sheets here
-    }
-}
-
-@Composable
-fun StartNewGameBottomSheet() {
-    Box(modifier = Modifier.height(300.dp)) {
-        Text(text = "Ui needs to be done")
     }
 }
 //endregion
@@ -557,14 +198,6 @@ fun ResumeGameCardPreview() {
 fun RulesCardPreview() {
     WizardCompanionTheme {
         RulesCard()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun StartNewGameBottomSheetPreview() {
-    WizardCompanionTheme {
-        BottomSheet(BottomSheetType.StartNewGame)
     }
 }
 //endregion

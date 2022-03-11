@@ -35,6 +35,10 @@ class HomeViewModel @Inject constructor(
                 sendAction(Action.Navigate(Screen.Score.route))
 //                uiState = uiState.copy(resumeGameCardVisible = false)
             }
+            is UiEvent.OnStartGameClicked -> {
+                val players = event.players.filter { it.isNotEmpty() }
+                println(players)
+            }
         }
     }
     //endregion

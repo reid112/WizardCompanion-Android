@@ -16,7 +16,15 @@
     <string name="label_resume_game">Resume Game</string>
     <string name="label_game_in_progress">It looks like you have a game in progress.  Would you like to resume this game?</string>
     <string name="label_rules">Rules</string>
+    <string name="label_add_player_names">Add Player Names</string>
+    <string name="label_enter_player_names">Enter the dealers name first, and then enter the rest in order of play.</string>
+
+    <string name="hint_player">Player %1$d</string>
+
+    <string name="content_description_add_player">Add Player Icon</string>
 
     <string name="button_new_game">New Game</string>
     <string name="button_resume_game">Resume Game</string>
+    <string name="button_start_game">Start Game</string>
+    <string name="button_add_player">Add Player</string>
 </resources>

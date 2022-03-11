@@ -12,6 +12,7 @@ sealed class Action {
 sealed class UiEvent {
     object OnNewGameClicked: UiEvent()
     object OnResumeGameClicked: UiEvent()
+    data class OnStartGameClicked(val players: List<String>): UiEvent()
 }
 
 sealed class BottomSheetType {
