@@ -13,7 +13,9 @@ import ca.rjreid.wizardcompanion.ui.screens.settings.SettingsScreen
 import ca.rjreid.wizardcompanion.util.Screen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
 fun NavigationGraph(
@@ -48,7 +50,14 @@ fun NavigationGraph(
 //                    )
 //                }
             ) {
-                EnterPlayerNamesScreen()
+                EnterPlayerNamesScreen(
+                    onNavigate = {
+                        navController.navigate(Screen.Score.route)
+                    },
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    }
+                )
             }
             composable(
                 route = Screen.Score.route,

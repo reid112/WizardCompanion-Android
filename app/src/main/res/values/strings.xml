@@ -8,6 +8,9 @@
     <string name="screen_title_score">Score</string>
     <string name="screen_title_game_details">Game Details</string>
 
+    <string name="tab_title_round">Round</string>
+    <string name="tab_title_game">Game</string>
+
     <string name="bottom_bar_home">Home</string>
     <string name="bottom_bar_past_games">Past Games</string>
     <string name="bottom_bar_settings">Settings</string>

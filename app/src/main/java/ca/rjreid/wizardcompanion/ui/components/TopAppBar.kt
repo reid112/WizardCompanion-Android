@@ -6,6 +6,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ca.rjreid.wizardcompanion.R
@@ -29,6 +30,7 @@ fun TopAppBar(navController: NavController) {
         title = { Text(text = currentTitle) },
         navigationIcon = null,
         backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary
+        contentColor = MaterialTheme.colors.onPrimary,
+        elevation = 0.dp
     )
 }

@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,14 +17,26 @@ import ca.rjreid.wizardcompanion.R
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
 import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
+import kotlinx.coroutines.flow.collect
 
 //region Composables
 @Composable
 fun EnterPlayerNamesScreen(
-    viewModel: EnterPlayerNamesViewModel = hiltViewModel()
+    viewModel: EnterPlayerNamesViewModel = hiltViewModel(),
+    onNavigate: (String) -> Unit,
+    onPopBackStack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val uiState = viewModel.uiState
+
+    LaunchedEffect(key1 = true) {
+        viewModel.actions.collect { action ->
+            when(action) {
+                is Action.Navigate -> onNavigate(action.route)
+                is Action.PopBackStack -> onPopBackStack()
+            }
+        }
+    }
 
     Card(modifier = Modifier
         .fillMaxWidth()
@@ -98,7 +111,10 @@ fun EnterPlayerNamesScreen(
 @Composable
 fun EnterPlayerNamesScreenPreview() {
     WizardCompanionTheme {
-        EnterPlayerNamesScreen()
+        EnterPlayerNamesScreen(
+            onNavigate = {},
+            onPopBackStack = {}
+        )
     }
 }
 //endregion

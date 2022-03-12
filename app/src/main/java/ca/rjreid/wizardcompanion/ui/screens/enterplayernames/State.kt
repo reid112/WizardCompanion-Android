@@ -7,6 +7,11 @@ data class UiState(
     var startGameButtonEnabled: Boolean = false
 )
 
+sealed class Action {
+    object PopBackStack: Action()
+    data class Navigate(val route: String): Action()
+}
+
 sealed class UiEvent {
     data class OnPlayerUpdated(val index: Int, val player: String): UiEvent()
     object OnAddPlayerClicked: UiEvent()

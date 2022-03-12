@@ -25,9 +25,11 @@ import ca.rjreid.wizardcompanion.ui.components.TopAppBar
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.util.BOTTOM_BAR_HEIGHT
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -41,6 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
 fun App() {
@@ -84,6 +87,7 @@ fun App() {
     }
 }
 
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable

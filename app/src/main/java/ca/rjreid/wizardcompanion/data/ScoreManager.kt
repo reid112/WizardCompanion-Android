@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 //region Interface
 interface ScoreManager {
-    fun startNewGame(playerNames: List<String>)
+    suspend fun startNewGame(playerNames: List<String>)
 }
 //endregion
 
@@ -16,7 +16,7 @@ class ScoreManagerImpl @Inject constructor(
 ) : ScoreManager {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    override fun startNewGame(playerNames: List<String>) {
+    override suspend fun startNewGame(playerNames: List<String>) {
 //        var players: List<Player> = playerNames
 //            .toMutableList()
 //            .filter { it.isNotBlank() }

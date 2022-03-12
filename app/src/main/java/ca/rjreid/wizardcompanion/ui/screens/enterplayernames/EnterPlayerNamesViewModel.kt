@@ -4,10 +4,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import ca.rjreid.wizardcompanion.data.ScoreManager
 import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
 import ca.rjreid.wizardcompanion.util.MIN_PLAYER_COUNT
+import ca.rjreid.wizardcompanion.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +22,9 @@ class EnterPlayerNamesViewModel @Inject constructor(
     //region Variables
     var uiState by mutableStateOf(UiState())
         private set
+
+    private val _actions = Channel<Action>()
+    val actions = _actions.receiveAsFlow()
     //endregion
 
     //region Public
@@ -58,7 +66,18 @@ class EnterPlayerNamesViewModel @Inject constructor(
     }
 
     private fun startGame() {
-        scoreManager.startNewGame(uiState.players)
+        viewModelScope.launch {
+            scoreManager.startNewGame(uiState.players)
+        }
+
+        sendAction(Action.PopBackStack)
+        sendAction(Action.Navigate(Screen.Score.route))
+    }
+
+    private fun sendAction(action: Action) {
+        viewModelScope.launch {
+            _actions.send(action)
+        }
     }
     //endregion
 }
