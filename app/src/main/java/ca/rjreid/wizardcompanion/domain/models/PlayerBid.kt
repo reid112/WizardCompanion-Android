@@ -1,8 +1,9 @@
 package ca.rjreid.wizardcompanion.domain.models
 
 data class PlayerBid(
+    val id: Long,
     val player: Player,
-    val bid: Int = 0,
-    val actual: Int? = null,
-    val score: Int? = null
+    var bid: Int = 0,
+    var actual: Int = 0,
+    var score: Int = 0
 )

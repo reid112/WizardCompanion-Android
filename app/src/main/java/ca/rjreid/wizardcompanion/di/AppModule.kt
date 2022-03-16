@@ -27,7 +27,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideWizardRepository(db: WizardDatabase): WizardRepository {
-        return WizardRepositoryImpl(db.playerDao, db.roundDao, db.gameDao)
+        return WizardRepositoryImpl(db.gameDao)
     }
 
     @Provides

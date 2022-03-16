@@ -1,67 +1,101 @@
 package ca.rjreid.wizardcompanion.data
 
 import ca.rjreid.wizardcompanion.data.dao.GameDao
-import ca.rjreid.wizardcompanion.data.dao.PlayerDao
-import ca.rjreid.wizardcompanion.data.dao.RoundDao
-import ca.rjreid.wizardcompanion.data.entities.Game
-import ca.rjreid.wizardcompanion.data.entities.Player
-import ca.rjreid.wizardcompanion.data.entities.Round
+import ca.rjreid.wizardcompanion.data.models.entities.*
+import ca.rjreid.wizardcompanion.data.models.entities.relations.GameWithPlayersAndRounds
 import kotlinx.coroutines.flow.Flow
 
 interface WizardRepository {
-    //region Player
-    suspend fun insertPlayers(players: List<Player>)
-    //endregion
-
-    //region Round
-    suspend fun insertRound(round: Round)
-    suspend fun getRoundById(roundId: Int): Round?
-    //endregion
-
-    //region Game
-    suspend fun insertGame(game: Game)
-    suspend fun getGameById(gameId: Int): Game?
-    suspend fun getGameWithDetails(gameId: Int): Map<Game, List<Round>>
-    fun getPastGamesWithDetails(): Flow<Map<Game, List<Round>>>
-    //endregion
+    fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?>
+    suspend fun startNameGame(players: List<PlayerDto>): Long
+    suspend fun startNewRound(rounds: List<RoundDto>, playerBids: List<PlayerBidDto>)
+    suspend fun updateGame(game: GameDto)
+    suspend fun updateRounds(rounds: List<RoundDto>)
+    suspend fun updatePlayerBids(playerBids: List<PlayerBidDto>)
+//    fun getPastGamesWithDetails(): Flow<Map<GameDto, List<RoundDto>>>
 }
 
 class WizardRepositoryImpl(
-    private val playerDao: PlayerDao,
-    private val roundDao: RoundDao,
-    private val gameDao: GameDao
+    private val gameDao: GameDao,
 ) : WizardRepository {
-    //region Player
-    override suspend fun insertPlayers(players: List<Player>) {
-        playerDao.insertPlayers(players)
-    }
-    //endregion
-
-    //region Round
-    override suspend fun insertRound(round: Round) {
-        roundDao.insertRound(round)
-    }
-
-    override suspend fun getRoundById(roundId: Int): Round? {
-        return roundDao.getRoundById(roundId)
-    }
-    //endregion
-
-    //region Game
-    override suspend fun insertGame(game: Game) {
-        gameDao.insertGame(game)
-    }
-
-    override suspend fun getGameById(gameId: Int): Game? {
+    override fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?> {
         return gameDao.getGameById(gameId)
     }
 
-    override suspend fun getGameWithDetails(gameId: Int): Map<Game, List<Round>> {
-        return gameDao.getGameWithDetails(gameId)
+    override suspend fun startNameGame(players: List<PlayerDto>): Long {
+        // Insert a new game
+        val game = GameDto()
+        game.id = gameDao.insertGame(game)
+
+        // Insert all players and update their id
+        players.forEach { player ->
+            player.id = gameDao.insertPlayer(player)
+            gameDao.insertGamePlayer(GamePlayersDto(
+                gameId = game.id,
+                playerId = player.id
+            ))
+        }
+
+        // Insert the first round
+        val round = RoundDto(gameId = game.id, dealerId = players.first().id)
+        round.id = gameDao.insertRound(round)
+
+        // Insert player bids for first round
+        players.forEach { player ->
+            gameDao.insertPlayerBid(PlayerBidDto(
+                playerId = player.id,
+                roundId = round.id,
+            ))
+        }
+
+        return game.id
     }
 
-    override fun getPastGamesWithDetails(): Flow<Map<Game, List<Round>>> {
-        return gameDao.getPastGamesWithDetails()
+    override suspend fun startNewRound(rounds: List<RoundDto>, playerBids: List<PlayerBidDto>) {
+        var newRoundId: Long = 0
+        rounds.forEach { round ->
+            if (round.id > 0) {
+                gameDao.updateRound(round)
+            } else {
+                newRoundId = gameDao.insertRound(round)
+            }
+        }
+
+        playerBids.forEach { playerBid ->
+            if (playerBid.id > 0) {
+                gameDao.updatePlayerBid(playerBid)
+            } else {
+                playerBid.roundId = newRoundId
+                gameDao.insertPlayerBid(playerBid)
+            }
+        }
     }
-    //endregion
+
+    override suspend fun updateGame(game: GameDto) {
+        gameDao.updateGame(game)
+    }
+
+    override suspend fun updateRounds(rounds: List<RoundDto>) {
+        rounds.forEach {
+            if (it.id > 0) {
+                gameDao.updateRound(it)
+            } else {
+                gameDao.insertRound(it)
+            }
+        }
+    }
+
+    override suspend fun updatePlayerBids(playerBids: List<PlayerBidDto>) {
+        playerBids.forEach {
+            if (it.id > 0) {
+                gameDao.updatePlayerBid(it)
+            } else {
+                gameDao.updatePlayerBid(it)
+            }
+        }
+    }
+
+    //    override fun getPastGamesWithDetails(): Flow<Map<GameDto, List<RoundDto>>> {
+//        return gameDao.getPastGamesWithDetails()
+//    }
 }

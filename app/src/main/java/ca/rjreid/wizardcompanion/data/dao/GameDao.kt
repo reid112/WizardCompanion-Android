@@ -1,31 +1,40 @@
 package ca.rjreid.wizardcompanion.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import ca.rjreid.wizardcompanion.data.entities.Game
-import ca.rjreid.wizardcompanion.data.entities.Round
+import androidx.room.*
+import ca.rjreid.wizardcompanion.data.models.entities.*
+import ca.rjreid.wizardcompanion.data.models.entities.relations.GameWithPlayersAndRounds
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDao {
+    @Transaction
+    @Query("SELECT * FROM games WHERE id = :gameId")
+    fun getGameById(gameId: Long): Flow<GameWithPlayersAndRounds?>
+
     @Insert
-    suspend fun insertGame(game: Game)
+    suspend fun insertGame(game: GameDto): Long
 
-    @Query("SELECT * FROM game WHERE id = :gameId")
-    suspend fun getGameById(gameId: Int): Game?
+    @Insert
+    suspend fun insertRound(round: RoundDto): Long
 
-    @Query(
-        "SELECT * FROM game " +
-                "JOIN round ON game.id = round.gameId " +
-                "WHERE game.id = :gameId"
-    )
-    suspend fun getGameWithDetails(gameId: Int): Map<Game, List<Round>>
+    @Insert
+    suspend fun insertPlayer(player: PlayerDto): Long
 
-    @Query(
-        "SELECT * FROM game " +
-                "JOIN round ON game.id = round.gameId " +
-                "WHERE game.winnerId != null"
-    )
-    fun getPastGamesWithDetails(): Flow<Map<Game, List<Round>>>
+    @Insert
+    suspend fun insertPlayerBid(playerBid: PlayerBidDto): Long
+
+    @Insert
+    suspend fun insertGamePlayer(gamePlayer: GamePlayersDto): Long
+
+    @Update
+    suspend fun updateGame(game: GameDto)
+
+    @Update
+    suspend fun updateRound(rounds: RoundDto)
+
+    @Update
+    suspend fun updatePlayer(player: PlayerDto)
+
+    @Update
+    suspend fun updatePlayerBid(playerBid: PlayerBidDto)
 }

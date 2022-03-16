@@ -4,25 +4,19 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ca.rjreid.wizardcompanion.data.dao.GameDao
-import ca.rjreid.wizardcompanion.data.dao.PlayerDao
-import ca.rjreid.wizardcompanion.data.dao.RoundDao
-import ca.rjreid.wizardcompanion.data.entities.Game
-import ca.rjreid.wizardcompanion.data.entities.Player
-import ca.rjreid.wizardcompanion.data.entities.PlayerRound
-import ca.rjreid.wizardcompanion.data.entities.Round
+import ca.rjreid.wizardcompanion.data.models.entities.*
 import ca.rjreid.wizardcompanion.data.utils.Converters
 
 @Database(
     entities = [
-        Game::class,
-        Player::class,
-        PlayerRound::class,
-        Round::class],
+        GameDto::class,
+        GamePlayersDto::class,
+        PlayerDto::class,
+        PlayerBidDto::class,
+        RoundDto::class],
     version = 1
 )
 @TypeConverters(Converters::class)
 abstract class WizardDatabase : RoomDatabase() {
     abstract val gameDao: GameDao
-    abstract val roundDao: RoundDao
-    abstract val playerDao: PlayerDao
 }

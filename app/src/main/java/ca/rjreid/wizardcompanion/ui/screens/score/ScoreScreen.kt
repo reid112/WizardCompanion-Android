@@ -17,9 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
-import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
-import ca.rjreid.wizardcompanion.domain.models.Round
 import ca.rjreid.wizardcompanion.ui.components.SeparatorDot
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
@@ -74,9 +72,13 @@ fun ScoreScreen(
         ) { tabIndex ->
             when (tabIndex) {
                 0 -> RoundTabContent(
-                    currentRound = uiState.currentRound,
+                    uiState = uiState,
                     onAddBidClicked = { viewModel.onEvent(UiEvent.OnAddBidClicked(it)) },
-                    onRemoveBidClicked = { viewModel.onEvent(UiEvent.OnRemoveBidClicked(it)) }
+                    onAddActualClicked = { viewModel.onEvent(UiEvent.OnAddActualClicked(it)) },
+                    onRemoveBidClicked = { viewModel.onEvent(UiEvent.OnRemoveBidClicked(it)) },
+                    onRemoveActualClicked = { viewModel.onEvent(UiEvent.OnRemoveActualClicked(it)) },
+                    onDealClicked = { viewModel.onEvent(UiEvent.OnDealClicked) },
+                    onNextRoundClicked = { viewModel.onEvent(UiEvent.OnNextRoundClicked) }
                 )
                 1 -> GameTabContent()
             }
@@ -86,9 +88,13 @@ fun ScoreScreen(
 
 @Composable
 fun RoundTabContent(
-    currentRound: Round,
+    uiState: UiState,
     onAddBidClicked: (PlayerBid) -> Unit,
-    onRemoveBidClicked: (PlayerBid) -> Unit
+    onAddActualClicked: (PlayerBid) -> Unit,
+    onRemoveBidClicked: (PlayerBid) -> Unit,
+    onRemoveActualClicked: (PlayerBid) -> Unit,
+    onDealClicked: () -> Unit,
+    onNextRoundClicked: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -101,9 +107,13 @@ fun RoundTabContent(
     ) {
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         RoundSummaryCard(
-            currentRound = currentRound,
+            uiState = uiState,
             onAddBidClicked = onAddBidClicked,
-            onRemoveBidClicked = onRemoveBidClicked
+            onAddActualClicked = onAddActualClicked,
+            onRemoveBidClicked = onRemoveBidClicked,
+            onRemoveActualClicked = onRemoveActualClicked,
+            onDealClicked = onDealClicked,
+            onNextRoundClicked = onNextRoundClicked
         )
     }
 }
@@ -111,23 +121,27 @@ fun RoundTabContent(
 @Composable
 fun RoundSummaryCard(
     modifier: Modifier = Modifier,
-    currentRound: Round,
+    uiState: UiState,
     onAddBidClicked: (PlayerBid) -> Unit,
-    onRemoveBidClicked: (PlayerBid) -> Unit
+    onAddActualClicked: (PlayerBid) -> Unit,
+    onRemoveBidClicked: (PlayerBid) -> Unit,
+    onRemoveActualClicked: (PlayerBid) -> Unit,
+    onDealClicked: () -> Unit,
+    onNextRoundClicked: () -> Unit
 ) {
     Card(modifier) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
-                text = stringResource(id = R.string.label_round, currentRound.number),
+                text = stringResource(id = R.string.label_round, uiState.roundNumber),
                 style = MaterialTheme.typography.h6
             )
             Text(
-                text = stringResource(id = R.string.label_dealer, currentRound.dealer.name),
+                text = stringResource(id = R.string.label_dealer, uiState.dealer),
                 style = MaterialTheme.typography.body2
             )
             Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
-            currentRound.playerBids.forEach { playerBid->
+            uiState.bids.forEach { playerBid->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -149,48 +163,87 @@ fun RoundSummaryCard(
                             textAlign = TextAlign.Center,
                             maxLines = 1,
                         )
-                        SeparatorDot(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
-                        Text(
-                            text = playerBid.bid.toString(),
-                            style = MaterialTheme.typography.subtitle2,
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                        )
+                        if (uiState.hasDealt) {
+                            SeparatorDot(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
+                            Text(
+                                text = playerBid.bid.toString(),
+                                style = MaterialTheme.typography.subtitle2,
+                                textAlign = TextAlign.Center,
+                                maxLines = 1,
+                            )
+                        }
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconButton(onClick = { onRemoveBidClicked(playerBid) }) {
+                        IconButton(
+                            enabled = if (uiState.hasDealt)
+                                playerBid.actual > 0
+                            else
+                                playerBid.bid > 0,
+                            onClick = {
+                                if (uiState.hasDealt)
+                                    onRemoveActualClicked(playerBid)
+                                else
+                                    onRemoveBidClicked(playerBid)
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Remove,
-                                contentDescription = stringResource(id = R.string.content_description_subtract),
-                                tint = MaterialTheme.colors.primary
+                                contentDescription = stringResource(id = R.string.content_description_subtract)
                             )
                         }
                         Text(
-                            text = playerBid.bid.toString(),
+                            text = if (uiState.hasDealt)
+                                playerBid.actual.toString()
+                            else
+                                playerBid.bid.toString(),
                             style = MaterialTheme.typography.h5,
+                            color = MaterialTheme.colors.primary,
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small)
                         )
-                        IconButton(onClick = { onAddBidClicked(playerBid) }) {
+                        IconButton(
+                            enabled = if (uiState.hasDealt)
+                                uiState.bids.sumOf { it.actual } < uiState.roundNumber
+                            else
+                                playerBid.bid < uiState.roundNumber,
+                            onClick = {
+                                if (uiState.hasDealt)
+                                    onAddActualClicked(playerBid)
+                                else
+                                    onAddBidClicked(playerBid)
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
                                 contentDescription = stringResource(id = R.string.content_description_add),
-                                tint = MaterialTheme.colors.primary
                             )
                         }
-
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {  }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.button_deal),
-                    style = MaterialTheme.typography.button
-                )
+
+            if (uiState.hasDealt) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = uiState.nextRoundButtonEnabled,
+                    onClick = { onNextRoundClicked() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_next_round),
+                        style = MaterialTheme.typography.button
+                    )
+                }
+            } else {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { onDealClicked() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_deal),
+                        style = MaterialTheme.typography.button
+                    )
+                }
             }
         }
     }
@@ -233,32 +286,15 @@ fun GameTabContentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun RoundSummaryCardPreview() {
-    val round = Round(3, Player("Dave"), listOf(
-        PlayerBid(
-            Player("Riley"),
-            0,
-            0,
-            888
-        ),
-        PlayerBid(
-            Player("Britt"),
-            2,
-            2,
-            80
-        ),
-        PlayerBid(
-            Player("Dave"),
-            1,
-            1,
-            -10
-        )
-    ))
-
     WizardCompanionTheme {
         RoundSummaryCard(
-            currentRound = round,
+            uiState = UiState(),
             onAddBidClicked = { },
-            onRemoveBidClicked = { }
+            onAddActualClicked = { },
+            onRemoveBidClicked = { },
+            onRemoveActualClicked = { },
+            onDealClicked = { },
+            onNextRoundClicked = { }
         )
     }
 }

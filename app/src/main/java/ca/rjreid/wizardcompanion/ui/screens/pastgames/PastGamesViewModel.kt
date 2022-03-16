@@ -9,7 +9,6 @@ import ca.rjreid.wizardcompanion.data.WizardRepository
 import ca.rjreid.wizardcompanion.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,11 +43,11 @@ class PastGamesViewModel @Inject constructor(
 
     //region Helpers
     private fun loadPastGames() {
-        viewModelScope.launch {
-            repository.getPastGamesWithDetails().collect {
-                uiState = uiState.copy(pastGames = it)
-            }
-        }
+//        viewModelScope.launch {
+//            repository.getPastGamesWithDetails().collect {
+//                uiState = uiState.copy(pastGames = it)
+//            }
+//        }
     }
 
     private fun sendAction(action: Action) {

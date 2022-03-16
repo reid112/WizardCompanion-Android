@@ -68,10 +68,9 @@ class EnterPlayerNamesViewModel @Inject constructor(
     private fun startGame() {
         viewModelScope.launch {
             scoreManager.startNewGame(uiState.players)
+            sendAction(Action.PopBackStack)
+            sendAction(Action.Navigate(Screen.Score.route))
         }
-
-        sendAction(Action.PopBackStack)
-        sendAction(Action.Navigate(Screen.Score.route))
     }
 
     private fun sendAction(action: Action) {
