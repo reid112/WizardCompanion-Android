@@ -5,6 +5,7 @@ import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
 import ca.rjreid.wizardcompanion.domain.models.Round
+import ca.rjreid.wizardcompanion.util.TOTAL_CARDS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -35,8 +36,7 @@ class ScoreManagerImpl @Inject constructor(
             .map { it.toGame() }
     }
 
-    override fun getTotalRounds(game: Game): Int = 3
-//    override fun getTotalRounds(game: Game): Int = TOTAL_CARDS / game.players.size
+    override fun getTotalRounds(game: Game): Int = TOTAL_CARDS / game.players.size
 
     override suspend fun startNewGame(playerNames: List<String>) {
         val players: List<Player> = playerNames

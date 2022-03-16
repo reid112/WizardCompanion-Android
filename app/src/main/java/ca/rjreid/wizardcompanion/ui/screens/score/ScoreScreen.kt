@@ -18,8 +18,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
+import ca.rjreid.wizardcompanion.domain.models.Round
 import ca.rjreid.wizardcompanion.ui.components.SeparatorDot
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
@@ -94,7 +96,7 @@ fun ScoreScreen(
                     onFinishGameClicked = { viewModel.onEvent(UiEvent.OnFinishGameClicked) },
                     onEndGameClicked = { viewModel.onEvent(UiEvent.OnEndGameClicked) }
                 )
-                1 -> GameTabContent()
+                1 -> GameTabContent(uiState.gameSummary)
             }
         }
     }
@@ -310,7 +312,9 @@ fun RoundSummaryCard(
 }
 
 @Composable
-fun GameTabContent() {
+fun GameTabContent(
+    game: Game?
+) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -320,7 +324,36 @@ fun GameTabContent() {
             .padding(horizontal = MaterialTheme.spacing.medium)
             .verticalScroll(state = scrollState),
     ) {
-        Text(text = "Game Tab Content")
+        if (game == null) {
+            Text("TODO")
+        } else {
+            game.rounds.forEach {
+                GameRoundDetailsCard(round = it)
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            }
+        }
+    }
+}
+
+@Composable
+fun GameRoundDetailsCard(
+    modifier: Modifier = Modifier,
+    round: Round
+) {
+    Card(modifier) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+            Text(
+                text = stringResource(id = R.string.label_round, round.number),
+                style = MaterialTheme.typography.h6
+            )
+            Text(
+                text = stringResource(id = R.string.label_dealer, round.dealer.name),
+                style = MaterialTheme.typography.body2
+            )
+            Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
+
+
+        }
     }
 }
 //endregion
@@ -341,7 +374,24 @@ fun DefaultPreview() {
 @Composable
 fun GameTabContentPreview() {
     WizardCompanionTheme {
-        GameTabContent()
+        GameTabContent(
+            game = null
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GameRoundDetailsCardPreview() {
+    WizardCompanionTheme {
+        GameRoundDetailsCard(
+            round = Round(
+                id = 0,
+                number = 3,
+                dealer = Player(0, "Riley"),
+                playerBids = listOf()
+            )
+        )
     }
 }
 

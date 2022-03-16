@@ -48,7 +48,8 @@ class ScoreViewModel @Inject constructor(
                     dealer = currentRound.dealer.name,
                     bids = currentRound.playerBids,
                     isLastRound = isLastRound,
-                    winner = game.winner
+                    winner = game.winner,
+                    gameSummary = game
                 )
             }
         }

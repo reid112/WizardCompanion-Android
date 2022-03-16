@@ -1,5 +1,6 @@
 package ca.rjreid.wizardcompanion.ui.screens.score
 
+import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
 import java.util.*
@@ -12,7 +13,8 @@ data class UiState(
     var dealer: String = "",
     var bids: List<PlayerBid> = listOf(),
     var nextRoundButtonEnabled: Boolean = false,
-    var winner: Player? = null
+    var winner: Player? = null,
+    var gameSummary: Game? = null
 )
 
 sealed class Action {
