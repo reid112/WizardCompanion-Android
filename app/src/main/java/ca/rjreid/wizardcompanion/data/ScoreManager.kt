@@ -15,8 +15,10 @@ import kotlin.math.abs
 //region Interface
 interface ScoreManager {
     fun getGameDetails(): Flow<Game>
+    fun getTotalRounds(game: Game): Int
     suspend fun startNewGame(playerNames: List<String>)
     suspend fun startNextRound(game: Game)
+    suspend fun finishGame(game: Game)
     suspend fun updateGame(game: Game)
 }
 //endregion
@@ -33,6 +35,8 @@ class ScoreManagerImpl @Inject constructor(
             .filterNotNull()
             .map { it.toGame() }
     }
+
+    override fun getTotalRounds(game: Game): Int = TOTAL_CARDS / game.players.size
 
     override suspend fun startNewGame(playerNames: List<String>) {
         val players: List<Player> = playerNames
@@ -81,6 +85,10 @@ class ScoreManagerImpl @Inject constructor(
         )
     }
 
+    override suspend fun finishGame(game: Game) {
+        // TODO
+    }
+
     override suspend fun updateGame(game: Game) {
         gameId?.let { id ->
             repository.updateGame(game.toGameDto())
@@ -91,8 +99,6 @@ class ScoreManagerImpl @Inject constructor(
             }
         }
     }
-
-    private fun getTotalRounds(game: Game): Int = TOTAL_CARDS / game.players.size
 
     private fun getNextDealer(game: Game): Player {
         val currentDealer = game.rounds.last().dealer

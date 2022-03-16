@@ -34,12 +34,15 @@ class ScoreViewModel @Inject constructor(
                 game = it
                 currentRound = game.rounds.last()
 
+                val isLastRound = currentRound.number == scoreManager.getTotalRounds(game)
+
                 uiState = uiState.copy(
                     forceUpdate = UUID.randomUUID().toString(),
                     hasDealt = hasDealt,
                     roundNumber = currentRound.number,
                     dealer = currentRound.dealer.name,
                     bids = currentRound.playerBids,
+                    isLastRound = isLastRound
                 )
             }
         }
@@ -79,6 +82,11 @@ class ScoreViewModel @Inject constructor(
                 hasDealt = false
                 viewModelScope.launch {
                     scoreManager.startNextRound(game)
+                }
+            }
+            is UiEvent.OnFinishGameClicked -> {
+                viewModelScope.launch {
+                    scoreManager.finishGame(game)
                 }
             }
         }

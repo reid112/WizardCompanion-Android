@@ -38,4 +38,5 @@
     <string name="button_add_player">Add Player</string>
     <string name="button_deal">Deal</string>
     <string name="button_next_round">Next Round</string>
+    <string name="button_finish_game">Finish Game</string>
 </resources>

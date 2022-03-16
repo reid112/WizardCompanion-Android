@@ -6,6 +6,7 @@ import java.util.*
 data class UiState(
     var forceUpdate: String = UUID.randomUUID().toString(),
     var hasDealt: Boolean = false,
+    var isLastRound: Boolean = false,
     var roundNumber: Int = 1,
     var dealer: String = "",
     var bids: List<PlayerBid> = listOf(),
@@ -19,4 +20,5 @@ sealed class UiEvent {
     data class OnRemoveActualClicked(val bid: PlayerBid): UiEvent()
     object OnDealClicked: UiEvent()
     object OnNextRoundClicked: UiEvent()
+    object OnFinishGameClicked: UiEvent()
 }

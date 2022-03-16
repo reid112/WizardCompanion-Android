@@ -78,7 +78,8 @@ fun ScoreScreen(
                     onRemoveBidClicked = { viewModel.onEvent(UiEvent.OnRemoveBidClicked(it)) },
                     onRemoveActualClicked = { viewModel.onEvent(UiEvent.OnRemoveActualClicked(it)) },
                     onDealClicked = { viewModel.onEvent(UiEvent.OnDealClicked) },
-                    onNextRoundClicked = { viewModel.onEvent(UiEvent.OnNextRoundClicked) }
+                    onNextRoundClicked = { viewModel.onEvent(UiEvent.OnNextRoundClicked) },
+                    onFinishGameClicked = {viewModel.onEvent(UiEvent.OnFinishGameClicked) }
                 )
                 1 -> GameTabContent()
             }
@@ -94,7 +95,8 @@ fun RoundTabContent(
     onRemoveBidClicked: (PlayerBid) -> Unit,
     onRemoveActualClicked: (PlayerBid) -> Unit,
     onDealClicked: () -> Unit,
-    onNextRoundClicked: () -> Unit
+    onNextRoundClicked: () -> Unit,
+    onFinishGameClicked: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -113,7 +115,8 @@ fun RoundTabContent(
             onRemoveBidClicked = onRemoveBidClicked,
             onRemoveActualClicked = onRemoveActualClicked,
             onDealClicked = onDealClicked,
-            onNextRoundClicked = onNextRoundClicked
+            onNextRoundClicked = onNextRoundClicked,
+            onFinishGameClicked = onFinishGameClicked
         )
     }
 }
@@ -127,7 +130,8 @@ fun RoundSummaryCard(
     onRemoveBidClicked: (PlayerBid) -> Unit,
     onRemoveActualClicked: (PlayerBid) -> Unit,
     onDealClicked: () -> Unit,
-    onNextRoundClicked: () -> Unit
+    onNextRoundClicked: () -> Unit,
+    onFinishGameClicked: () -> Unit
 ) {
     Card(modifier) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
@@ -223,27 +227,28 @@ fun RoundSummaryCard(
 
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
+            var callback = onDealClicked
+            var buttonText = stringResource(id = R.string.button_deal)
+            var enabled = true
             if (uiState.hasDealt) {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = uiState.nextRoundButtonEnabled,
-                    onClick = { onNextRoundClicked() }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.button_next_round),
-                        style = MaterialTheme.typography.button
-                    )
-                }
-            } else {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { onDealClicked() }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.button_deal),
-                        style = MaterialTheme.typography.button
-                    )
-                }
+                callback = onNextRoundClicked
+                buttonText = stringResource(id = R.string.button_next_round)
+                enabled = uiState.nextRoundButtonEnabled
+            } else if (uiState.isLastRound) {
+                callback = onFinishGameClicked
+                buttonText = stringResource(id = R.string.button_finish_game)
+                enabled = uiState.nextRoundButtonEnabled
+            }
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = enabled,
+                onClick = { callback() }
+            ) {
+                Text(
+                    text = buttonText,
+                    style = MaterialTheme.typography.button
+                )
             }
         }
     }
@@ -294,7 +299,8 @@ fun RoundSummaryCardPreview() {
             onRemoveBidClicked = { },
             onRemoveActualClicked = { },
             onDealClicked = { },
-            onNextRoundClicked = { }
+            onNextRoundClicked = { },
+            onFinishGameClicked = { }
         )
     }
 }
