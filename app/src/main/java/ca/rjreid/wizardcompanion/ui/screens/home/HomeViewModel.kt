@@ -18,7 +18,7 @@ class HomeViewModel @Inject constructor(
     private val repository: WizardRepository
 ): ViewModel() {
     //region Variables
-    var uiState by mutableStateOf(UiState(resumeGameCardVisible = true))
+    var uiState by mutableStateOf(UiState())
         private set
 
     private val _actions = Channel<Action>()
