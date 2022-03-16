@@ -24,6 +24,8 @@
     <string name="label_enter_player_names">Enter the dealers name first, and then enter the rest in order of play.</string>
     <string name="label_round">Round %1$d</string>
     <string name="label_dealer">Dealer: %1$s</string>
+    <string name="label_game_over">Game Over</string>
+    <string name="label_winner">Winner: %1$s</string>
 
     <string name="hint_player">Player %1$d</string>
 
@@ -39,4 +41,5 @@
     <string name="button_deal">Deal</string>
     <string name="button_next_round">Next Round</string>
     <string name="button_finish_game">Finish Game</string>
+    <string name="button_end_game">End Game</string>
 </resources>

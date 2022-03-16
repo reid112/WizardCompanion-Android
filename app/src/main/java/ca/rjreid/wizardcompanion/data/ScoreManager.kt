@@ -5,7 +5,6 @@ import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
 import ca.rjreid.wizardcompanion.domain.models.Round
-import ca.rjreid.wizardcompanion.util.TOTAL_CARDS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -36,7 +35,8 @@ class ScoreManagerImpl @Inject constructor(
             .map { it.toGame() }
     }
 
-    override fun getTotalRounds(game: Game): Int = TOTAL_CARDS / game.players.size
+    override fun getTotalRounds(game: Game): Int = 3
+//    override fun getTotalRounds(game: Game): Int = TOTAL_CARDS / game.players.size
 
     override suspend fun startNewGame(playerNames: List<String>) {
         val players: List<Player> = playerNames
@@ -51,33 +51,25 @@ class ScoreManagerImpl @Inject constructor(
 
     override suspend fun startNextRound(game: Game) {
         val lastRound = game.rounds.last()
-        lastRound.playerBids.forEach {
-            it.score = if (it.bid == it.actual) {
-                it.score + (20 + (it.actual * 10))
-            } else {
-                it.score + (abs(it.bid - it.actual) * -10)
-            }
-        }
+        calculateRoundScore(game)
 
-        if (lastRound.number < getTotalRounds(game)) {
-            val playerBids = game.rounds.last().playerBids.map {
-                PlayerBid(
-                    id = 0,
-                    player = it.player,
-                    score = it.score
-                )
-            }
-            val newRound = Round(
+        val playerBids = game.rounds.last().playerBids.map {
+            PlayerBid(
                 id = 0,
-                number = lastRound.number + 1,
-                dealer = getNextDealer(game),
-                playerBids = playerBids
+                player = it.player,
+                score = it.score
             )
-
-            val mutableRounds = game.rounds.toMutableList()
-            mutableRounds.add(newRound)
-            game.rounds = mutableRounds
         }
+        val newRound = Round(
+            id = 0,
+            number = lastRound.number + 1,
+            dealer = getNextDealer(game),
+            playerBids = playerBids
+        )
+
+        val mutableRounds = game.rounds.toMutableList()
+        mutableRounds.add(newRound)
+        game.rounds = mutableRounds
 
         repository.startNewRound(
             rounds = game.rounds.map { it.toRoundDto(game.id) },
@@ -86,7 +78,12 @@ class ScoreManagerImpl @Inject constructor(
     }
 
     override suspend fun finishGame(game: Game) {
-        // TODO
+        val lastRound = game.rounds.last()
+        calculateRoundScore(game)
+        game.winner = game.rounds.last().playerBids.sortedBy { it.score }.last().player
+        repository.updateGame(game.toGameDto())
+        repository.updateRounds(game.rounds.map { it.toRoundDto(game.id) })
+        repository.updatePlayerBids(game.rounds.last().playerBids.map { it.toPlayerBidDto(lastRound.id) })
     }
 
     override suspend fun updateGame(game: Game) {
@@ -110,6 +107,17 @@ class ScoreManagerImpl @Inject constructor(
         }
 
         return game.players[nextDealerIndex]
+    }
+
+    private fun calculateRoundScore(game: Game) {
+        val lastRound = game.rounds.last()
+        lastRound.playerBids.forEach {
+            it.score = if (it.bid == it.actual) {
+                it.score + (20 + (it.actual * 10))
+            } else {
+                it.score + (abs(it.bid - it.actual) * -10)
+            }
+        }
     }
 }
 //endregion

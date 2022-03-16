@@ -9,7 +9,9 @@ import ca.rjreid.wizardcompanion.data.ScoreManager
 import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Round
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -19,12 +21,15 @@ class ScoreViewModel @Inject constructor(
     private val scoreManager: ScoreManager
 ): ViewModel() {
     //region Variables
-    var uiState by mutableStateOf(UiState())
-        private set
-
     private lateinit var game: Game
     private lateinit var currentRound: Round
     private var hasDealt = false
+
+    var uiState by mutableStateOf(UiState())
+        private set
+
+    private val _actions = Channel<Action>()
+    val actions = _actions.receiveAsFlow()
     //endregion
 
     //region Init
@@ -42,7 +47,8 @@ class ScoreViewModel @Inject constructor(
                     roundNumber = currentRound.number,
                     dealer = currentRound.dealer.name,
                     bids = currentRound.playerBids,
-                    isLastRound = isLastRound
+                    isLastRound = isLastRound,
+                    winner = game.winner
                 )
             }
         }
@@ -87,6 +93,11 @@ class ScoreViewModel @Inject constructor(
             is UiEvent.OnFinishGameClicked -> {
                 viewModelScope.launch {
                     scoreManager.finishGame(game)
+                }
+            }
+            is UiEvent.OnEndGameClicked -> {
+                viewModelScope.launch {
+                    _actions.send(Action.PopBackStack)
                 }
             }
         }

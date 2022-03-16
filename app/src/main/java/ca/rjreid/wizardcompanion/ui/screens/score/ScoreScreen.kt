@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
 import ca.rjreid.wizardcompanion.ui.components.SeparatorDot
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
@@ -25,15 +27,25 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 //region Composables
 @ExperimentalPagerApi
 @Composable
 fun ScoreScreen(
-    viewModel: ScoreViewModel = hiltViewModel()
+    viewModel: ScoreViewModel = hiltViewModel(),
+    popBackStack: () -> Unit
 ) {
     val uiState = viewModel.uiState
+
+    LaunchedEffect(key1 = true) {
+        viewModel.actions.collect { action ->
+            when(action) {
+                is Action.PopBackStack -> popBackStack()
+            }
+        }
+    }
 
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
@@ -79,7 +91,8 @@ fun ScoreScreen(
                     onRemoveActualClicked = { viewModel.onEvent(UiEvent.OnRemoveActualClicked(it)) },
                     onDealClicked = { viewModel.onEvent(UiEvent.OnDealClicked) },
                     onNextRoundClicked = { viewModel.onEvent(UiEvent.OnNextRoundClicked) },
-                    onFinishGameClicked = {viewModel.onEvent(UiEvent.OnFinishGameClicked) }
+                    onFinishGameClicked = { viewModel.onEvent(UiEvent.OnFinishGameClicked) },
+                    onEndGameClicked = { viewModel.onEvent(UiEvent.OnEndGameClicked) }
                 )
                 1 -> GameTabContent()
             }
@@ -96,7 +109,8 @@ fun RoundTabContent(
     onRemoveActualClicked: (PlayerBid) -> Unit,
     onDealClicked: () -> Unit,
     onNextRoundClicked: () -> Unit,
-    onFinishGameClicked: () -> Unit
+    onFinishGameClicked: () -> Unit,
+    onEndGameClicked: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -108,16 +122,55 @@ fun RoundTabContent(
             .verticalScroll(state = scrollState),
     ) {
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-        RoundSummaryCard(
-            uiState = uiState,
-            onAddBidClicked = onAddBidClicked,
-            onAddActualClicked = onAddActualClicked,
-            onRemoveBidClicked = onRemoveBidClicked,
-            onRemoveActualClicked = onRemoveActualClicked,
-            onDealClicked = onDealClicked,
-            onNextRoundClicked = onNextRoundClicked,
-            onFinishGameClicked = onFinishGameClicked
-        )
+
+        val winner = uiState.winner
+        if (winner != null) {
+            WinnerCard(
+                winner = winner,
+                onEndGameClicked = onEndGameClicked
+            )
+        } else {
+            RoundSummaryCard(
+                uiState = uiState,
+                onAddBidClicked = onAddBidClicked,
+                onAddActualClicked = onAddActualClicked,
+                onRemoveBidClicked = onRemoveBidClicked,
+                onRemoveActualClicked = onRemoveActualClicked,
+                onDealClicked = onDealClicked,
+                onNextRoundClicked = onNextRoundClicked,
+                onFinishGameClicked = onFinishGameClicked
+            )
+        }
+    }
+}
+
+@Composable
+fun WinnerCard(
+    modifier: Modifier = Modifier,
+    winner: Player,
+    onEndGameClicked: () -> Unit
+) {
+    Card(modifier) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+            Text(
+                text = stringResource(id = R.string.label_game_over),
+                style = MaterialTheme.typography.h6
+            )
+            Text(
+                text = stringResource(id = R.string.label_winner, winner.name),
+                style = MaterialTheme.typography.body2
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onEndGameClicked() }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.button_end_game),
+                    style = MaterialTheme.typography.button
+                )
+            }
+        }
     }
 }
 
@@ -231,13 +284,15 @@ fun RoundSummaryCard(
             var buttonText = stringResource(id = R.string.button_deal)
             var enabled = true
             if (uiState.hasDealt) {
-                callback = onNextRoundClicked
-                buttonText = stringResource(id = R.string.button_next_round)
-                enabled = uiState.nextRoundButtonEnabled
-            } else if (uiState.isLastRound) {
-                callback = onFinishGameClicked
-                buttonText = stringResource(id = R.string.button_finish_game)
-                enabled = uiState.nextRoundButtonEnabled
+                if (uiState.isLastRound) {
+                    callback = onFinishGameClicked
+                    buttonText = stringResource(id = R.string.button_finish_game)
+                    enabled = uiState.nextRoundButtonEnabled
+                } else {
+                    callback = onNextRoundClicked
+                    buttonText = stringResource(id = R.string.button_next_round)
+                    enabled = uiState.nextRoundButtonEnabled
+                }
             }
 
             Button(
@@ -276,7 +331,9 @@ fun GameTabContent() {
 @Composable
 fun DefaultPreview() {
     WizardCompanionTheme {
-        ScoreScreen()
+        ScoreScreen(
+            popBackStack = { }
+        )
     }
 }
 

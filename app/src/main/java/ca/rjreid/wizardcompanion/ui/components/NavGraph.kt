@@ -74,7 +74,9 @@ fun NavigationGraph(
 //                    )
 //                }
             ) {
-                ScoreScreen()
+                ScoreScreen(
+                    popBackStack = { navController.popBackStack() }
+                )
             }
             composable(
                 route = Screen.GameDetails.route,
