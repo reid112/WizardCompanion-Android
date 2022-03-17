@@ -61,7 +61,8 @@ fun ScoreScreen(
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(
+                    color = MaterialTheme.colors.secondary,
+                    modifier = Modifier.pagerTabIndicatorOffset(
                         pagerState,
                         tabPositions
                     )
@@ -328,9 +329,9 @@ fun GameTabContent(
             Text("TODO")
         } else {
             game.rounds.forEach {
-                GameRoundDetailsCard(round = it)
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.medium), round = it)
             }
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
         }
     }
 }
@@ -352,7 +353,69 @@ fun GameRoundDetailsCard(
             )
             Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.label_player),
+                    style = MaterialTheme.typography.overline,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.weight(4f)
+                )
+                Text(
+                    text = stringResource(id = R.string.label_score),
+                    style = MaterialTheme.typography.overline,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(2f)
+                )
+                Text(
+                    text = stringResource(id = R.string.label_bid),
+                    style = MaterialTheme.typography.overline,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(2f)
+                )
+                Text(
+                    text = stringResource(id = R.string.label_actual),
+                    style = MaterialTheme.typography.overline,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(2f)
+                )
+            }
 
+            round.playerBids.forEach {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = it.player.name,
+                        style = MaterialTheme.typography.subtitle2,
+                        textAlign = TextAlign.Left,
+                        modifier = Modifier.weight(4f)
+                    )
+                    Text(
+                        text = it.score.toString(),
+                        style = MaterialTheme.typography.subtitle2,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(2f)
+                    )
+                    Text(
+                        text = it.bid.toString(),
+                        style = MaterialTheme.typography.subtitle2,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(2f)
+                    )
+                    Text(
+                        text = it.actual.toString(),
+                        style = MaterialTheme.typography.subtitle2,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+            }
         }
     }
 }

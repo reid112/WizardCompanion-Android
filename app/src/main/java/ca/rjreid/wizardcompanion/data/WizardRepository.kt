@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface WizardRepository {
     fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?>
     suspend fun startNameGame(players: List<PlayerDto>): Long
-    suspend fun startNewRound(rounds: List<RoundDto>, playerBids: List<PlayerBidDto>)
+    suspend fun startNewRound(rounds: List<RoundDto>, currentBids: List<PlayerBidDto>, newBids: List<PlayerBidDto>)
     suspend fun updateGame(game: GameDto)
     suspend fun updateRounds(rounds: List<RoundDto>)
     suspend fun updatePlayerBids(playerBids: List<PlayerBidDto>)
@@ -51,7 +51,11 @@ class WizardRepositoryImpl(
         return game.id
     }
 
-    override suspend fun startNewRound(rounds: List<RoundDto>, playerBids: List<PlayerBidDto>) {
+    override suspend fun startNewRound(
+        rounds: List<RoundDto>,
+        currentBids: List<PlayerBidDto>,
+        newBids: List<PlayerBidDto>
+    ) {
         var newRoundId: Long = 0
         rounds.forEach { round ->
             if (round.id > 0) {
@@ -61,13 +65,13 @@ class WizardRepositoryImpl(
             }
         }
 
-        playerBids.forEach { playerBid ->
-            if (playerBid.id > 0) {
-                gameDao.updatePlayerBid(playerBid)
-            } else {
-                playerBid.roundId = newRoundId
-                gameDao.insertPlayerBid(playerBid)
-            }
+        currentBids.forEach { playerBid ->
+            gameDao.updatePlayerBid(playerBid)
+        }
+
+        newBids.forEach { playerBid ->
+            playerBid.roundId = newRoundId
+            gameDao.insertPlayerBid(playerBid)
         }
     }
 

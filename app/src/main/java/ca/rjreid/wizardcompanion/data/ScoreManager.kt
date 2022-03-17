@@ -51,9 +51,9 @@ class ScoreManagerImpl @Inject constructor(
 
     override suspend fun startNextRound(game: Game) {
         val lastRound = game.rounds.last()
-        calculateRoundScore(game)
+        calculateRoundScore(lastRound)
 
-        val playerBids = game.rounds.last().playerBids.map {
+        val playerBids = lastRound.playerBids.map {
             PlayerBid(
                 id = 0,
                 player = it.player,
@@ -73,13 +73,14 @@ class ScoreManagerImpl @Inject constructor(
 
         repository.startNewRound(
             rounds = game.rounds.map { it.toRoundDto(game.id) },
-            playerBids = game.rounds.last().playerBids.map { it.toPlayerBidDto(0) }
+            currentBids = lastRound.playerBids.map { it.toPlayerBidDto(lastRound.id) },
+            newBids = game.rounds.last().playerBids.map { it.toPlayerBidDto(0) }
         )
     }
 
     override suspend fun finishGame(game: Game) {
         val lastRound = game.rounds.last()
-        calculateRoundScore(game)
+        calculateRoundScore(lastRound)
         game.winner = game.rounds.last().playerBids.sortedBy { it.score }.last().player
         repository.updateGame(game.toGameDto())
         repository.updateRounds(game.rounds.map { it.toRoundDto(game.id) })
@@ -109,9 +110,8 @@ class ScoreManagerImpl @Inject constructor(
         return game.players[nextDealerIndex]
     }
 
-    private fun calculateRoundScore(game: Game) {
-        val lastRound = game.rounds.last()
-        lastRound.playerBids.forEach {
+    private fun calculateRoundScore(round: Round) {
+        round.playerBids.forEach {
             it.score = if (it.bid == it.actual) {
                 it.score + (20 + (it.actual * 10))
             } else {
