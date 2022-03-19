@@ -1,5 +1,6 @@
 package ca.rjreid.wizardcompanion.ui.screens.enterplayernames
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -51,89 +52,96 @@ fun EnterPlayerNamesScreen(
         }
     }
 
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(MaterialTheme.spacing.medium)
-        .verticalScroll(state = scrollState)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+            .padding(horizontal = MaterialTheme.spacing.medium)
+            .verticalScroll(state = scrollState),
     ) {
-        Column(
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.medium)
-        ) {
-            Text(
-                text = stringResource(id = R.string.label_add_player_names),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = stringResource(id = R.string.label_enter_player_names),
-                style = MaterialTheme.typography.body2
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-
-            uiState.players.forEachIndexed { index, player ->
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onPreviewKeyEvent {
-                            if (it.key == Key.Tab){
-                                focusManager.moveFocus(FocusDirection.Down)
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    value = player,
-                    label = {
-                        Text(text = stringResource(id = R.string.hint_player, index + 1))
-                    },
-                    singleLine = true,
-                    onValueChange = { if (it.length < 12) viewModel.onEvent(UiEvent.OnPlayerUpdated(index, it)) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        capitalization = KeyboardCapitalization.Words,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-
-            if (uiState.players.count() < MAX_PLAYER_COUNT) {
-                TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { viewModel.onEvent(UiEvent.OnAddPlayerClicked) }
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(id = R.string.content_description_add_player)
-                        )
-                        Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
-                        Text(
-                            text = stringResource(id = R.string.button_add_player),
-                            style = MaterialTheme.typography.button
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                enabled = uiState.startGameButtonEnabled,
-                onClick = { viewModel.onEvent(UiEvent.OnStartGameClick) }
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.medium)
             ) {
                 Text(
-                    text = stringResource(id = R.string.button_start_game),
-                    style = MaterialTheme.typography.button
+                    text = stringResource(id = R.string.label_add_player_names),
+                    style = MaterialTheme.typography.h6
                 )
+                Text(
+                    text = stringResource(id = R.string.label_enter_player_names),
+                    style = MaterialTheme.typography.body2
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+
+                uiState.players.forEachIndexed { index, player ->
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onPreviewKeyEvent {
+                                if (it.key == Key.Tab){
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                    true
+                                } else {
+                                    false
+                                }
+                            },
+                        value = player,
+                        label = {
+                            Text(text = stringResource(id = R.string.hint_player, index + 1))
+                        },
+                        singleLine = true,
+                        onValueChange = { if (it.length < 12) viewModel.onEvent(UiEvent.OnPlayerUpdated(index, it)) },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            capitalization = KeyboardCapitalization.Words,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+
+                if (uiState.players.count() < MAX_PLAYER_COUNT) {
+                    TextButton(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = { viewModel.onEvent(UiEvent.OnAddPlayerClicked) }
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = stringResource(id = R.string.content_description_add_player)
+                            )
+                            Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
+                            Text(
+                                text = stringResource(id = R.string.button_add_player),
+                                style = MaterialTheme.typography.button
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = uiState.startGameButtonEnabled,
+                    onClick = { viewModel.onEvent(UiEvent.OnStartGameClick) }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_start_game),
+                        style = MaterialTheme.typography.button
+                    )
+                }
             }
         }
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
     }
+
 }
 //endregion
 
