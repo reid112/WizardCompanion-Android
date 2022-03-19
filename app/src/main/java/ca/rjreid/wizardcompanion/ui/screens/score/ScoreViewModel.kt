@@ -39,6 +39,11 @@ class ScoreViewModel @Inject constructor(
                 game = it
                 currentRound = game.rounds.last()
 
+                val currentDealerIndex = currentRound.playerBids.indexOfFirst { playerBid -> playerBid.player == currentRound.dealer }
+                val rotate = currentRound.playerBids.size - currentDealerIndex - 1
+
+                Collections.rotate(currentRound.playerBids, rotate)
+
                 val isLastRound = currentRound.number == scoreManager.getTotalRounds(game)
 
                 uiState = uiState.copy(

@@ -2,6 +2,8 @@ package ca.rjreid.wizardcompanion.ui.screens.enterplayernames
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,8 +11,17 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
@@ -20,6 +31,7 @@ import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
 import kotlinx.coroutines.flow.collect
 
 //region Composables
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EnterPlayerNamesScreen(
     viewModel: EnterPlayerNamesViewModel = hiltViewModel(),
@@ -27,6 +39,7 @@ fun EnterPlayerNamesScreen(
     onPopBackStack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val focusManager = LocalFocusManager.current
     val uiState = viewModel.uiState
 
     LaunchedEffect(key1 = true) {
@@ -60,12 +73,30 @@ fun EnterPlayerNamesScreen(
             uiState.players.forEachIndexed { index, player ->
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onPreviewKeyEvent {
+                            if (it.key == Key.Tab){
+                                focusManager.moveFocus(FocusDirection.Down)
+                                true
+                            } else {
+                                false
+                            }
+                        },
                     value = player,
                     label = {
                         Text(text = stringResource(id = R.string.hint_player, index + 1))
                     },
-                    onValueChange = { viewModel.onEvent(UiEvent.OnPlayerUpdated(index, it)) }
+                    singleLine = true,
+                    onValueChange = { if (it.length < 12) viewModel.onEvent(UiEvent.OnPlayerUpdated(index, it)) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    )
                 )
             }
 

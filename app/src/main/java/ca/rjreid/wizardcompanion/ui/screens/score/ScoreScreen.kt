@@ -326,7 +326,7 @@ fun GameTabContent(
             .verticalScroll(state = scrollState),
     ) {
         if (game == null) {
-            Text("TODO")
+            Text("Game is null... what??!!!?")
         } else {
             game.rounds.forEach {
                 GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.medium), round = it)
