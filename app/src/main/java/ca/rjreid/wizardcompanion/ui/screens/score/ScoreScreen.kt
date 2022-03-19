@@ -66,19 +66,19 @@ fun ScoreScreen(
             onDismissRequest = { viewModel.onEvent(UiEvent.OnLeaveDialogCancel) },
             confirmButton = {
                 TextButton(onClick = { viewModel.onEvent(UiEvent.OnLeaveDialogConfirm) }) {
-                    Text(text = "Confirm")
+                    Text(text = stringResource(id = R.string.button_confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.onEvent(UiEvent.OnLeaveDialogCancel) }) {
-                    Text(text = "Cancel")
+                    Text(text = stringResource(id = R.string.button_cancel))
                 }
             },
             title = {
-                Text(text = "Are you sure?")
+                Text(text = stringResource(id = R.string.dialog_score_title))
             },
             text = {
-                Text(text = "If you go back, you will lose your current game. Are you sure you want to go back?")
+                Text(text = stringResource(id = R.string.dialog_score_text))
             }
         )
     }
