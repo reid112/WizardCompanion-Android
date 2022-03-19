@@ -52,8 +52,6 @@ fun HomeScreen(
             viewModel.onEvent(UiEvent.OnNewGameClicked)
         }
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-        RulesCard(modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
     }
 }
 
@@ -114,22 +112,6 @@ fun ResumeGameCard(
         }
     }
 }
-
-@Composable
-fun RulesCard(modifier: Modifier = Modifier) {
-    Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
-            Text(
-                text = stringResource(id = R.string.label_rules),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = "Rules will go here",
-                style = MaterialTheme.typography.body2
-            )
-        }
-    }
-}
 //endregion
 
 //region Previews
@@ -154,14 +136,6 @@ fun PlayNowCardPreview() {
 fun ResumeGameCardPreview() {
     WizardCompanionTheme {
         ResumeGameCard(onResumeGameClick = {})
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RulesCardPreview() {
-    WizardCompanionTheme {
-        RulesCard()
     }
 }
 //endregion
