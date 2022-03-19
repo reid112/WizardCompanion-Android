@@ -314,14 +314,14 @@ fun RoundSummaryCard(
             var buttonText = stringResource(id = R.string.button_deal)
             var enabled = true
             if (uiState.hasDealt) {
+                enabled = uiState.nextRoundButtonEnabled
+
                 if (uiState.isLastRound) {
                     callback = onFinishGameClicked
                     buttonText = stringResource(id = R.string.button_finish_game)
-                    enabled = uiState.nextRoundButtonEnabled
                 } else {
                     callback = onNextRoundClicked
                     buttonText = stringResource(id = R.string.button_next_round)
-                    enabled = uiState.nextRoundButtonEnabled
                 }
             }
 

@@ -94,9 +94,11 @@ class ScoreViewModel @Inject constructor(
                 hasDealt = false
                 viewModelScope.launch {
                     scoreManager.startNextRound(game)
+                    updatePlayerBidsUiState()
                 }
             }
             is UiEvent.OnFinishGameClicked -> {
+                hasDealt = false
                 viewModelScope.launch {
                     scoreManager.finishGame(game)
                 }
