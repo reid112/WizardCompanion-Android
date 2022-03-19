@@ -14,7 +14,8 @@ data class UiState(
     var bids: List<PlayerBid> = listOf(),
     var nextRoundButtonEnabled: Boolean = false,
     var winner: Player? = null,
-    var gameSummary: Game? = null
+    var gameSummary: Game? = null,
+    var leaveDialogVisible: Boolean = false,
 )
 
 sealed class Action {
@@ -30,4 +31,7 @@ sealed class UiEvent {
     object OnNextRoundClicked: UiEvent()
     object OnFinishGameClicked: UiEvent()
     object OnEndGameClicked: UiEvent()
+    object OnBackPressed: UiEvent()
+    object OnLeaveDialogCancel: UiEvent()
+    object OnLeaveDialogConfirm: UiEvent()
 }

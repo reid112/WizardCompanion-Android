@@ -1,5 +1,6 @@
 package ca.rjreid.wizardcompanion.ui.screens.score
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -55,6 +56,32 @@ fun ScoreScreen(
         stringResource(id = R.string.tab_title_round),
         stringResource(id = R.string.tab_title_game)
     )
+
+    BackHandler {
+        viewModel.onEvent(UiEvent.OnBackPressed)
+    }
+
+    if (uiState.leaveDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(UiEvent.OnLeaveDialogCancel) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onEvent(UiEvent.OnLeaveDialogConfirm) }) {
+                    Text(text = "Confirm")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onEvent(UiEvent.OnLeaveDialogCancel) }) {
+                    Text(text = "Cancel")
+                }
+            },
+            title = {
+                Text(text = "Are you sure?")
+            },
+            text = {
+                Text(text = "If you go back, you will lose your current game. Are you sure you want to go back?")
+            }
+        )
+    }
 
     Column {
         TabRow(
