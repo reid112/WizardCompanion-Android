@@ -9,7 +9,11 @@ import kotlinx.coroutines.flow.Flow
 interface GameDao {
     @Transaction
     @Query("SELECT * FROM games WHERE id = :gameId")
-    fun getGameById(gameId: Long): Flow<GameWithPlayersAndRounds?>
+    fun getGameById(gameId: Long): Flow<GameWithPlayersAndRounds>
+
+    @Transaction
+    @Query("SELECT * FROM games WHERE winner_id != null")
+    fun getPastGames(): Flow<List<GameWithPlayersAndRounds>>
 
     @Insert
     suspend fun insertGame(game: GameDto): Long

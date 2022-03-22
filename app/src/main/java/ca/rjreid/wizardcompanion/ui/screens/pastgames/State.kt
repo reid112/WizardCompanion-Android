@@ -1,10 +1,10 @@
 package ca.rjreid.wizardcompanion.ui.screens.pastgames
 
 import ca.rjreid.wizardcompanion.data.models.entities.GameDto
-import ca.rjreid.wizardcompanion.data.models.entities.RoundDto
+import ca.rjreid.wizardcompanion.domain.models.Game
 
 data class UiState(
-    var pastGames: Map<GameDto, List<RoundDto>> = emptyMap()
+    var pastGames: List<Game>? = null
 )
 
 sealed class Action {

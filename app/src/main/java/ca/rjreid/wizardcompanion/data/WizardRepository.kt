@@ -6,20 +6,24 @@ import ca.rjreid.wizardcompanion.data.models.entities.relations.GameWithPlayersA
 import kotlinx.coroutines.flow.Flow
 
 interface WizardRepository {
-    fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?>
+    fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds>
+    fun getPastGamesWithDetails(): Flow<List<GameWithPlayersAndRounds>>
     suspend fun startNameGame(players: List<PlayerDto>): Long
     suspend fun startNewRound(rounds: List<RoundDto>, currentBids: List<PlayerBidDto>, newBids: List<PlayerBidDto>)
     suspend fun updateGame(game: GameDto)
     suspend fun updateRounds(rounds: List<RoundDto>)
     suspend fun updatePlayerBids(playerBids: List<PlayerBidDto>)
-//    fun getPastGamesWithDetails(): Flow<Map<GameDto, List<RoundDto>>>
 }
 
 class WizardRepositoryImpl(
     private val gameDao: GameDao,
 ) : WizardRepository {
-    override fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?> {
+    override fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds> {
         return gameDao.getGameById(gameId)
+    }
+
+    override fun getPastGamesWithDetails(): Flow<List<GameWithPlayersAndRounds>> {
+        return gameDao.getPastGames()
     }
 
     override suspend fun startNameGame(players: List<PlayerDto>): Long {
@@ -98,8 +102,4 @@ class WizardRepositoryImpl(
             }
         }
     }
-
-    //    override fun getPastGamesWithDetails(): Flow<Map<GameDto, List<RoundDto>>> {
-//        return gameDao.getPastGamesWithDetails()
-//    }
 }
