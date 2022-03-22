@@ -1,5 +1,6 @@
 package ca.rjreid.wizardcompanion.ui.screens.score
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -55,6 +56,32 @@ fun ScoreScreen(
         stringResource(id = R.string.tab_title_round),
         stringResource(id = R.string.tab_title_game)
     )
+
+    BackHandler {
+        viewModel.onEvent(UiEvent.OnBackPressed)
+    }
+
+    if (uiState.leaveDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(UiEvent.OnLeaveDialogCancel) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onEvent(UiEvent.OnLeaveDialogConfirm) }) {
+                    Text(text = stringResource(id = R.string.button_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onEvent(UiEvent.OnLeaveDialogCancel) }) {
+                    Text(text = stringResource(id = R.string.button_cancel))
+                }
+            },
+            title = {
+                Text(text = stringResource(id = R.string.dialog_score_title))
+            },
+            text = {
+                Text(text = stringResource(id = R.string.dialog_score_text))
+            }
+        )
+    }
 
     Column {
         TabRow(
@@ -287,14 +314,14 @@ fun RoundSummaryCard(
             var buttonText = stringResource(id = R.string.button_deal)
             var enabled = true
             if (uiState.hasDealt) {
+                enabled = uiState.nextRoundButtonEnabled
+
                 if (uiState.isLastRound) {
                     callback = onFinishGameClicked
                     buttonText = stringResource(id = R.string.button_finish_game)
-                    enabled = uiState.nextRoundButtonEnabled
                 } else {
                     callback = onNextRoundClicked
                     buttonText = stringResource(id = R.string.button_next_round)
-                    enabled = uiState.nextRoundButtonEnabled
                 }
             }
 

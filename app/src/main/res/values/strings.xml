@@ -32,6 +32,9 @@
     <string name="label_bid">Bid</string>
     <string name="label_actual">Actual</string>
 
+    <string name="dialog_score_title">Are you sure?</string>
+    <string name="dialog_score_text">If you go back, you will lose your current game. Are you sure you want to go back?</string>
+
     <string name="hint_player">Player %1$d</string>
 
     <string name="content_description_add_player">Add Player Icon</string>
@@ -47,4 +50,6 @@
     <string name="button_next_round">Next Round</string>
     <string name="button_finish_game">Finish Game</string>
     <string name="button_end_game">End Game</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_confirm">Confirm</string>
 </resources>

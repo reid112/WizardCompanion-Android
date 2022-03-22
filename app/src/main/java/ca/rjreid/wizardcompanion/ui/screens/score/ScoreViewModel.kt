@@ -94,17 +94,27 @@ class ScoreViewModel @Inject constructor(
                 hasDealt = false
                 viewModelScope.launch {
                     scoreManager.startNextRound(game)
+                    updatePlayerBidsUiState()
                 }
             }
             is UiEvent.OnFinishGameClicked -> {
+                hasDealt = false
                 viewModelScope.launch {
                     scoreManager.finishGame(game)
                 }
             }
             is UiEvent.OnEndGameClicked -> {
-                viewModelScope.launch {
-                    _actions.send(Action.PopBackStack)
-                }
+                sendAction(Action.PopBackStack)
+            }
+            is UiEvent.OnBackPressed -> {
+                uiState = uiState.copy(leaveDialogVisible = true)
+            }
+            is UiEvent.OnLeaveDialogCancel -> {
+                uiState = uiState.copy(leaveDialogVisible = false)
+            }
+            is UiEvent.OnLeaveDialogConfirm -> {
+                uiState = uiState.copy(leaveDialogVisible = false)
+                sendAction(Action.PopBackStack)
             }
         }
     }
@@ -118,6 +128,12 @@ class ScoreViewModel @Inject constructor(
             bids = currentRound.playerBids,
             nextRoundButtonEnabled = nextRoundButtonEnabled
         )
+    }
+
+    private fun sendAction(action: Action) {
+        viewModelScope.launch {
+            _actions.send(action)
+        }
     }
     //endregion
 }
