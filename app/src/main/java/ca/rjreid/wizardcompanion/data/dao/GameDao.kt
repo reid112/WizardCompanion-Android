@@ -12,7 +12,7 @@ interface GameDao {
     fun getGameById(gameId: Long): Flow<GameWithPlayersAndRounds>
 
     @Transaction
-    @Query("SELECT * FROM games WHERE winner_id != null")
+    @Query("SELECT * FROM games WHERE winner_id > 0")
     fun getPastGames(): Flow<List<GameWithPlayersAndRounds>>
 
     @Insert
