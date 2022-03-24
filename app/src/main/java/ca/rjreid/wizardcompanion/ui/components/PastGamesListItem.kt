@@ -1,6 +1,8 @@
 package ca.rjreid.wizardcompanion.ui.components.pastgameslist
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -16,6 +18,7 @@ import ca.rjreid.wizardcompanion.domain.models.PlayerBid
 import ca.rjreid.wizardcompanion.domain.models.Round
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
+import java.text.DateFormat
 import java.util.*
 
 @Composable
@@ -24,16 +27,24 @@ fun PastGameListItem(
     game: Game
 ) {
     val playerNames = game.players.joinToString(", ") { it.name }
+    val winner = game.winner?.name?.let {
+        stringResource(R.string.label_winner, it)
+    } ?: stringResource(id = R.string.label_unknown)
+    val dateFormatter = DateFormat.getDateInstance()
+    val date = dateFormatter.format(game.date)
+
     Card(modifier) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
-                text = Date(game.date.time).toString(),
+                text = date,
                 style = MaterialTheme.typography.overline
             )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
             Text(
-                text = stringResource(R.string.label_winner, game.winner?.name ?: "Unknown"),
+                text = winner,
                 style = MaterialTheme.typography.subtitle1
             )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
             Text(
                 text = stringResource(R.string.label_players, playerNames)
             )

@@ -26,6 +26,7 @@
     <string name="label_dealer">Dealer: %1$s</string>
     <string name="label_game_over">Game Over</string>
     <string name="label_winner">Winner: %1$s</string>
+    <string name="label_unknown">Unknown</string>
     <string name="label_player">Player</string>
     <string name="label_players">Players: %1$s</string>
     <string name="label_score">Score</string>
