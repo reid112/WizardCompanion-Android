@@ -30,7 +30,7 @@ fun NavigationGraph(
                 HomeScreen(onNavigate = { navController.navigate(it) })
             }
             composable(route = Screen.PastGames.route) {
-                PastGamesScreen()
+                PastGamesScreen(onNavigate = { navController.navigate(it) })
             }
             composable(route = Screen.Settings.route) {
                 SettingsScreen()

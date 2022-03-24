@@ -1,5 +1,6 @@
 package ca.rjreid.wizardcompanion.ui.components.pastgameslist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -24,7 +25,8 @@ import java.util.*
 @Composable
 fun PastGameListItem(
     modifier: Modifier = Modifier,
-    game: Game
+    game: Game,
+    onClick: (Long) -> Unit
 ) {
     val playerNames = game.players.joinToString(", ") { it.name }
     val winner = game.winner?.name?.let {
@@ -33,7 +35,7 @@ fun PastGameListItem(
     val dateFormatter = DateFormat.getDateInstance()
     val date = dateFormatter.format(game.date)
 
-    Card(modifier) {
+    Card(modifier.clickable { onClick(game.id) }) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
                 text = date,
@@ -64,12 +66,15 @@ fun PastGameListItemPreview() {
             PlayerBid(1, riley, 0, 0, 0)
         ))
 
-        PastGameListItem(game = Game(
-            id = 1,
-            date = Date(),
-            players = listOf(riley, brittani, dave),
-            rounds = listOf(round1),
-            winner = riley
-        ))
+        PastGameListItem(
+            game = Game(
+                id = 1,
+                date = Date(),
+                players = listOf(riley, brittani, dave),
+                rounds = listOf(round1),
+                winner = riley
+            ),
+            onClick = { }
+        )
     }
 }

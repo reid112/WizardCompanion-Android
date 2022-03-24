@@ -1,6 +1,5 @@
 package ca.rjreid.wizardcompanion.ui.screens.pastgames
 
-import ca.rjreid.wizardcompanion.data.models.entities.GameDto
 import ca.rjreid.wizardcompanion.domain.models.Game
 
 data class UiState(
@@ -17,5 +16,5 @@ sealed class Action {
 }
 
 sealed class UiEvent {
-    data class OnGameClicked(val game: GameDto): UiEvent()
+    data class OnGameClicked(val gameId: Long): UiEvent()
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,13 +15,23 @@ import ca.rjreid.wizardcompanion.ui.components.pastgameslist.PastGameListItem
 import ca.rjreid.wizardcompanion.ui.components.pastgameslist.PastGamesEmptyState
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun PastGamesScreen(
-    viewModel: PastGamesViewModel = hiltViewModel()
+    viewModel: PastGamesViewModel = hiltViewModel(),
+    onNavigate: (String) -> Unit
 ) {
     val listState = rememberLazyListState()
     val uiState = viewModel.uiState
+
+    LaunchedEffect(key1 = true) {
+        viewModel.actions.collect { action ->
+            when(action) {
+                is Action.Navigate -> onNavigate(action.route)
+            }
+        }
+    }
 
     uiState.pastGames?.let {
         LazyColumn(
@@ -32,7 +43,7 @@ fun PastGamesScreen(
         ) {
             items(items = it) { item ->
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
-                PastGameListItem(game = item)
+                PastGameListItem(game = item, onClick = { viewModel.onEvent(UiEvent.OnGameClicked(it)) })
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
             }
         }
@@ -45,6 +56,8 @@ fun PastGamesScreen(
 @Composable
 fun PastGamesScreenPreview() {
     WizardCompanionTheme {
-        PastGamesScreen()
+        PastGamesScreen(
+            onNavigate = { }
+        )
     }
 }

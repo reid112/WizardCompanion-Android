@@ -37,6 +37,7 @@ class PastGamesViewModel @Inject constructor(
     fun onEvent(event: UiEvent) {
         when (event) {
             is UiEvent.OnGameClicked -> {
+                // how to pass params to route?
                 sendAction(Action.Navigate(Screen.GameDetails.route))
             }
         }
