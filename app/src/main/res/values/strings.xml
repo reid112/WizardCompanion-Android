@@ -31,6 +31,7 @@
     <string name="label_score">Score</string>
     <string name="label_bid">Bid</string>
     <string name="label_actual">Actual</string>
+    <string name="label_past_games_empty_state">You current have not finished any games. Any games that you complete will show up here.</string>
 
     <string name="dialog_score_title">Are you sure?</string>
     <string name="dialog_score_text">If you go back, you will lose your current game. Are you sure you want to go back?</string>
