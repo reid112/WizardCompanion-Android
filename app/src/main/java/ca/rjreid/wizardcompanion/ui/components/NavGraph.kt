@@ -56,7 +56,7 @@ fun NavigationGraph(
             ) {
                 EnterPlayerNamesScreen(
                     onNavigate = {
-                        navController.navigate(Routes.SCORE.route)
+                        navController.navigate("${Routes.SCORE.route}/0")
                     },
                     onPopBackStack = {
                         navController.popBackStack()
@@ -65,6 +65,9 @@ fun NavigationGraph(
             }
             composable(
                 route = Screen.Score.route,
+                arguments = listOf(
+                    navArgument(Arguments.GAME_ID.arg) { type = NavType.LongType }
+                ),
 //                enterTransition = {
 //                    slideInVertically(
 //                        initialOffsetY = { it },

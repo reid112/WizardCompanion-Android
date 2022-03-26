@@ -1,16 +1,19 @@
 package ca.rjreid.wizardcompanion.data.models.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.util.*
 
 @Entity(
     tableName = "games",
-//    foreignKeys = [
-//        ForeignKey(entity = PlayerDto::class, parentColumns = ["id"], childColumns = ["winner_id"])
-//    ],
-//    indices = [Index("winner_id")]
+    foreignKeys = [
+        ForeignKey(
+            entity = PlayerDto::class,
+            parentColumns = ["id"],
+            childColumns = ["winner_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index("winner_id")]
 )
 data class GameDto(
     @PrimaryKey(autoGenerate = true)

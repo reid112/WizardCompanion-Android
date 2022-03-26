@@ -3,12 +3,14 @@ package ca.rjreid.wizardcompanion.ui.screens.score
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.rjreid.wizardcompanion.data.ScoreManager
 import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Round
 import ca.rjreid.wizardcompanion.domain.models.getLastRound
+import ca.rjreid.wizardcompanion.util.Arguments
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -20,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScoreViewModel @Inject constructor(
+    private val stateHandle: SavedStateHandle,
     private val scoreManager: ScoreManager
 ): ViewModel() {
     //region Variables
@@ -36,6 +39,12 @@ class ScoreViewModel @Inject constructor(
 
     //region Init
     init {
+        val inProgressGameId = stateHandle.get<Long>(Arguments.GAME_ID.arg)
+
+        if (inProgressGameId != null && inProgressGameId > 0) {
+            scoreManager.resumeGame(inProgressGameId)
+        }
+
         getGameDetails()
     }
     //endregion

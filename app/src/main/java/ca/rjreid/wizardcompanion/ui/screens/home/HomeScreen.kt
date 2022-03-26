@@ -4,13 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import ca.rjreid.wizardcompanion.R
 import ca.rjreid.wizardcompanion.ui.components.PlayNowCard
 import ca.rjreid.wizardcompanion.ui.components.ResumeGameCard
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
@@ -33,6 +34,28 @@ fun HomeScreen(
                 is Action.Navigate -> onNavigate(action.route)
             }
         }
+    }
+
+    if (uiState.startGameDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(UiEvent.OnStartGameDialogCancel) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onEvent(UiEvent.OnStartGameDialogConfirm) }) {
+                    Text(text = stringResource(id = R.string.button_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onEvent(UiEvent.OnStartGameDialogCancel) }) {
+                    Text(text = stringResource(id = R.string.button_cancel))
+                }
+            },
+            title = {
+                Text(text = stringResource(id = R.string.dialog_game_in_progress_title))
+            },
+            text = {
+                Text(text = stringResource(id = R.string.dialog_game_in_progress_text))
+            }
+        )
     }
 
     Column(

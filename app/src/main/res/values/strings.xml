@@ -36,8 +36,10 @@
 
     <string name="error_generic">Oops. Something went wrong.  Please try again.</string>
 
+    <string name="dialog_game_in_progress_title">Are you sure?</string>
+    <string name="dialog_game_in_progress_text">If you start a new game, you will lose your game that is currently in progress. Are you sure you want to start a new game?</string>
     <string name="dialog_score_title">Are you sure?</string>
-    <string name="dialog_score_text">If you go back, you will lose your current game. Are you sure you want to go back?</string>
+    <string name="dialog_score_text">Are you sure you want to go back? You will be able to resume this game from the home screen!</string>
 
     <string name="hint_player">Player %1$d</string>
 

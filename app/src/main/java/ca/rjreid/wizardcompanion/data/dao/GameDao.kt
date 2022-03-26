@@ -15,6 +15,14 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE winner_id NOT NULL")
     fun getPastGames(): Flow<List<GameWithPlayersAndRounds>>
 
+    @Transaction
+    @Query("SELECT * FROM games WHERE winner_id IS NULL LIMIT 1")
+    fun getInProgressGame(): Flow<GameWithPlayersAndRounds?>
+
+    @Transaction
+    @Query("DELETE FROM games WHERE winner_id IS NULL")
+    suspend fun removeAllInProgressGames()
+
     @Insert
     suspend fun insertGame(game: GameDto): Long
 

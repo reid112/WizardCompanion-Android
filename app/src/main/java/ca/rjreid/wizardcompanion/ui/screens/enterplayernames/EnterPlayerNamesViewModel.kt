@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.rjreid.wizardcompanion.data.ScoreManager
+import ca.rjreid.wizardcompanion.data.WizardRepository
 import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
 import ca.rjreid.wizardcompanion.util.MIN_PLAYER_COUNT
 import ca.rjreid.wizardcompanion.util.Routes
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EnterPlayerNamesViewModel @Inject constructor(
+    private val repository: WizardRepository,
     private val scoreManager: ScoreManager
 ) : ViewModel() {
     //region Variables
@@ -26,6 +28,14 @@ class EnterPlayerNamesViewModel @Inject constructor(
 
     private val _actions = Channel<Action>()
     val actions = _actions.receiveAsFlow()
+    //endregion
+
+    //region Init
+    init {
+        viewModelScope.launch {
+            repository.removeAllInProgressGames()
+        }
+    }
     //endregion
 
     //region Public
@@ -70,7 +80,7 @@ class EnterPlayerNamesViewModel @Inject constructor(
         viewModelScope.launch {
             scoreManager.startNewGame(uiState.players)
             sendAction(Action.PopBackStack)
-            sendAction(Action.Navigate(Routes.SCORE.route))
+            sendAction(Action.Navigate("${Routes.SCORE.route}/0"))
         }
     }
 

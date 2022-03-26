@@ -5,7 +5,7 @@ sealed class Screen(val route: String) {
     object PastGames: Screen(Routes.PAST_GAMES.route)
     object Settings: Screen(Routes.SETTINGS.route)
     object EnterPlayers: Screen(Routes.ENTER_PLAYERS.route)
-    object Score: Screen(Routes.SCORE.route)
+    object Score: Screen("${Routes.SCORE.route}/{${Arguments.GAME_ID.arg}}")
     object GameDetails: Screen("${Routes.GAME_DETAILS.route}/{${Arguments.GAME_ID.arg}}")
 }
 

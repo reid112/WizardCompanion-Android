@@ -1,19 +1,28 @@
 package ca.rjreid.wizardcompanion.data.models.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+
 
 @Entity(
     tableName = "player_bids",
-//    foreignKeys = [
-//        ForeignKey(entity = RoundDto::class, parentColumns = ["id"], childColumns = ["round_id"]),
-//        ForeignKey(entity = PlayerDto::class, parentColumns = ["id"], childColumns = ["player_id"])
-//    ],
-//    indices = [
-//        Index("round_id"),
-//        Index("player_id")
-//    ]
+    foreignKeys = [
+        ForeignKey(
+            entity = RoundDto::class,
+            parentColumns = ["id"],
+            childColumns = ["round_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = PlayerDto::class,
+            parentColumns = ["id"],
+            childColumns = ["player_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index("round_id"),
+        Index("player_id")
+    ]
 )
 data class PlayerBidDto(
     @PrimaryKey(autoGenerate = true)

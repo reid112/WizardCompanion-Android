@@ -13,6 +13,7 @@ import kotlin.math.abs
 interface ScoreManager {
     fun getGameDetails(): Flow<Game>
     fun getTotalRounds(game: Game): Int
+    fun resumeGame(gameId: Long)
     suspend fun startNewGame(playerNames: List<String>)
     suspend fun startNextRound(game: Game)
     suspend fun finishGame(game: Game)
@@ -34,6 +35,10 @@ class ScoreManagerImpl @Inject constructor(
     }
 
     override fun getTotalRounds(game: Game): Int = TOTAL_CARDS / game.players.size
+
+    override fun resumeGame(gameId: Long) {
+        this.gameId = gameId
+    }
 
     override suspend fun startNewGame(playerNames: List<String>) {
         val players: List<Player> = playerNames

@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.Flow
 interface WizardRepository {
     fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?>
     fun getPastGamesWithDetails(): Flow<List<GameWithPlayersAndRounds>>
+    fun getInProgressGame(): Flow<GameWithPlayersAndRounds?>
     suspend fun startNameGame(players: List<PlayerDto>): Long
     suspend fun startNewRound(rounds: List<RoundDto>, currentBids: List<PlayerBidDto>, newBids: List<PlayerBidDto>)
     suspend fun updateGame(game: GameDto)
     suspend fun updateRounds(rounds: List<RoundDto>)
     suspend fun updatePlayerBids(playerBids: List<PlayerBidDto>)
+    suspend fun removeAllInProgressGames()
 }
 
 class WizardRepositoryImpl(
@@ -24,6 +26,10 @@ class WizardRepositoryImpl(
 
     override fun getPastGamesWithDetails(): Flow<List<GameWithPlayersAndRounds>> {
         return gameDao.getPastGames()
+    }
+
+    override fun getInProgressGame(): Flow<GameWithPlayersAndRounds?> {
+        return gameDao.getInProgressGame()
     }
 
     override suspend fun startNameGame(players: List<PlayerDto>): Long {
@@ -101,5 +107,9 @@ class WizardRepositoryImpl(
                 gameDao.updatePlayerBid(it)
             }
         }
+    }
+
+    override suspend fun removeAllInProgressGames() {
+        gameDao.removeAllInProgressGames()
     }
 }
