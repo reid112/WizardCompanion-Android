@@ -1,5 +1,6 @@
 package ca.rjreid.wizardcompanion.ui.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -42,9 +43,17 @@ fun PlayNowCard(
     }
 }
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun PlayNowCardPreview() {
+    WizardCompanionTheme {
+        PlayNowCard(onPlayNowClick = {})
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun PlayNowCardDarkPreview() {
     WizardCompanionTheme {
         PlayNowCard(onPlayNowClick = {})
     }
