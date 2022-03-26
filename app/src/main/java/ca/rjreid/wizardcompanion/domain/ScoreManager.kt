@@ -1,5 +1,6 @@
-package ca.rjreid.wizardcompanion.data
+package ca.rjreid.wizardcompanion.domain
 
+import ca.rjreid.wizardcompanion.data.WizardRepository
 import ca.rjreid.wizardcompanion.domain.mappers.*
 import ca.rjreid.wizardcompanion.domain.models.*
 import ca.rjreid.wizardcompanion.util.TOTAL_CARDS

@@ -5,12 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.rjreid.wizardcompanion.data.ScoreManager
 import ca.rjreid.wizardcompanion.data.WizardRepository
+import ca.rjreid.wizardcompanion.domain.ScoreManager
 import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
 import ca.rjreid.wizardcompanion.util.MIN_PLAYER_COUNT
 import ca.rjreid.wizardcompanion.util.Routes
-import ca.rjreid.wizardcompanion.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

@@ -2,7 +2,11 @@ package ca.rjreid.wizardcompanion.di
 
 import android.app.Application
 import androidx.room.Room
-import ca.rjreid.wizardcompanion.data.*
+import ca.rjreid.wizardcompanion.data.WizardDatabase
+import ca.rjreid.wizardcompanion.data.WizardRepository
+import ca.rjreid.wizardcompanion.data.WizardRepositoryImpl
+import ca.rjreid.wizardcompanion.domain.ScoreManager
+import ca.rjreid.wizardcompanion.domain.ScoreManagerImpl
 import ca.rjreid.wizardcompanion.util.WIZARD_DATABASE_NAME
 import dagger.Module
 import dagger.Provides
