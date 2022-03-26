@@ -1,10 +1,7 @@
-package ca.rjreid.wizardcompanion.ui.components.pastgameslist
+package ca.rjreid.wizardcompanion.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -35,7 +32,9 @@ fun PastGameListItem(
     val dateFormatter = DateFormat.getDateInstance()
     val date = dateFormatter.format(game.date)
 
-    Card(modifier.clickable { onClick(game.id) }) {
+    Card(modifier
+        .fillMaxWidth()
+        .clickable { onClick(game.id) }) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
                 text = date,

@@ -4,12 +4,16 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import ca.rjreid.wizardcompanion.ui.screens.enterplayernames.EnterPlayerNamesScreen
 import ca.rjreid.wizardcompanion.ui.screens.gamedetails.GameDetailsScreen
 import ca.rjreid.wizardcompanion.ui.screens.home.HomeScreen
 import ca.rjreid.wizardcompanion.ui.screens.pastgames.PastGamesScreen
 import ca.rjreid.wizardcompanion.ui.screens.score.ScoreScreen
 import ca.rjreid.wizardcompanion.ui.screens.settings.SettingsScreen
+import ca.rjreid.wizardcompanion.util.Arguments
+import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.Screen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -52,7 +56,7 @@ fun NavigationGraph(
             ) {
                 EnterPlayerNamesScreen(
                     onNavigate = {
-                        navController.navigate(Screen.Score.route)
+                        navController.navigate(Routes.SCORE.route)
                     },
                     onPopBackStack = {
                         navController.popBackStack()
@@ -80,6 +84,9 @@ fun NavigationGraph(
             }
             composable(
                 route = Screen.GameDetails.route,
+                arguments = listOf(
+                    navArgument(Arguments.GAME_ID.arg) { type = NavType.LongType }
+                ),
 //                enterTransition = {
 //                    slideInVertically(
 //                        initialOffsetY = { -it },

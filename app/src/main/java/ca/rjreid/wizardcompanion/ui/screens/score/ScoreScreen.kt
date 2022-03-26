@@ -23,6 +23,7 @@ import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
 import ca.rjreid.wizardcompanion.domain.models.Round
+import ca.rjreid.wizardcompanion.ui.components.GameRoundDetailsCard
 import ca.rjreid.wizardcompanion.ui.components.SeparatorDot
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
@@ -124,7 +125,7 @@ fun ScoreScreen(
                     onFinishGameClicked = { viewModel.onEvent(UiEvent.OnFinishGameClicked) },
                     onEndGameClicked = { viewModel.onEvent(UiEvent.OnEndGameClicked) }
                 )
-                1 -> GameTabContent(uiState.gameSummary)
+                1 -> GameTabContent(uiState)
             }
         }
     }
@@ -217,123 +218,132 @@ fun RoundSummaryCard(
     onFinishGameClicked: () -> Unit
 ) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
-            Text(
-                text = stringResource(id = R.string.label_round, uiState.roundNumber),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = stringResource(id = R.string.label_dealer, uiState.dealer),
-                style = MaterialTheme.typography.body2
-            )
-            Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
+        if (uiState.loading) {
+            Box(
+                modifier = Modifier.padding(MaterialTheme.spacing.medium),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+                Text(
+                    text = stringResource(id = R.string.label_round, uiState.roundNumber),
+                    style = MaterialTheme.typography.h6
+                )
+                Text(
+                    text = stringResource(id = R.string.label_dealer, uiState.dealer),
+                    style = MaterialTheme.typography.body2
+                )
+                Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
-            uiState.bids.forEach { playerBid->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                uiState.bids.forEach { playerBid->
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = playerBid.player.name,
-                            style = MaterialTheme.typography.subtitle1,
-                            maxLines = 1,
-                        )
-                        SeparatorDot(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
-                        Text(
-                            text = playerBid.score.toString(),
-                            style = MaterialTheme.typography.subtitle2,
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                        )
-                        if (uiState.hasDealt) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Text(
+                                text = playerBid.player.name,
+                                style = MaterialTheme.typography.subtitle1,
+                                maxLines = 1,
+                            )
                             SeparatorDot(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
                             Text(
-                                text = playerBid.bid.toString(),
+                                text = playerBid.score.toString(),
                                 style = MaterialTheme.typography.subtitle2,
                                 textAlign = TextAlign.Center,
                                 maxLines = 1,
                             )
-                        }
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconButton(
-                            enabled = if (uiState.hasDealt)
-                                playerBid.actual > 0
-                            else
-                                playerBid.bid > 0,
-                            onClick = {
-                                if (uiState.hasDealt)
-                                    onRemoveActualClicked(playerBid)
-                                else
-                                    onRemoveBidClicked(playerBid)
+                            if (uiState.hasDealt) {
+                                SeparatorDot(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
+                                Text(
+                                    text = playerBid.bid.toString(),
+                                    style = MaterialTheme.typography.subtitle2,
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1,
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Remove,
-                                contentDescription = stringResource(id = R.string.content_description_subtract)
-                            )
                         }
-                        Text(
-                            text = if (uiState.hasDealt)
-                                playerBid.actual.toString()
-                            else
-                                playerBid.bid.toString(),
-                            style = MaterialTheme.typography.h5,
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small)
-                        )
-                        IconButton(
-                            enabled = if (uiState.hasDealt)
-                                uiState.bids.sumOf { it.actual } < uiState.roundNumber
-                            else
-                                playerBid.bid < uiState.roundNumber,
-                            onClick = {
-                                if (uiState.hasDealt)
-                                    onAddActualClicked(playerBid)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                enabled = if (uiState.hasDealt)
+                                    playerBid.actual > 0
                                 else
-                                    onAddBidClicked(playerBid)
+                                    playerBid.bid > 0,
+                                onClick = {
+                                    if (uiState.hasDealt)
+                                        onRemoveActualClicked(playerBid)
+                                    else
+                                        onRemoveBidClicked(playerBid)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Remove,
+                                    contentDescription = stringResource(id = R.string.content_description_subtract)
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = stringResource(id = R.string.content_description_add),
+                            Text(
+                                text = if (uiState.hasDealt)
+                                    playerBid.actual.toString()
+                                else
+                                    playerBid.bid.toString(),
+                                style = MaterialTheme.typography.h5,
+                                color = MaterialTheme.colors.primary,
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small)
                             )
+                            IconButton(
+                                enabled = if (uiState.hasDealt)
+                                    uiState.bids.sumOf { it.actual } < uiState.roundNumber
+                                else
+                                    playerBid.bid < uiState.roundNumber,
+                                onClick = {
+                                    if (uiState.hasDealt)
+                                        onAddActualClicked(playerBid)
+                                    else
+                                        onAddBidClicked(playerBid)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = stringResource(id = R.string.content_description_add),
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
-            var callback = onDealClicked
-            var buttonText = stringResource(id = R.string.button_deal)
-            var enabled = true
-            if (uiState.hasDealt) {
-                enabled = uiState.nextRoundButtonEnabled
+                var callback = onDealClicked
+                var buttonText = stringResource(id = R.string.button_deal)
+                var enabled = true
+                if (uiState.hasDealt) {
+                    enabled = uiState.nextRoundButtonEnabled
 
-                if (uiState.isLastRound) {
-                    callback = onFinishGameClicked
-                    buttonText = stringResource(id = R.string.button_finish_game)
-                } else {
-                    callback = onNextRoundClicked
-                    buttonText = stringResource(id = R.string.button_next_round)
+                    if (uiState.isLastRound) {
+                        callback = onFinishGameClicked
+                        buttonText = stringResource(id = R.string.button_finish_game)
+                    } else {
+                        callback = onNextRoundClicked
+                        buttonText = stringResource(id = R.string.button_next_round)
+                    }
                 }
-            }
 
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                enabled = enabled,
-                onClick = { callback() }
-            ) {
-                Text(
-                    text = buttonText,
-                    style = MaterialTheme.typography.button
-                )
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = enabled,
+                    onClick = { callback() }
+                ) {
+                    Text(
+                        text = buttonText,
+                        style = MaterialTheme.typography.button
+                    )
+                }
             }
         }
     }
@@ -341,9 +351,10 @@ fun RoundSummaryCard(
 
 @Composable
 fun GameTabContent(
-    game: Game?
+    uiState: UiState
 ) {
     val scrollState = rememberScrollState()
+    val game = uiState.gameSummary
 
     Column(
         modifier = Modifier
@@ -363,89 +374,7 @@ fun GameTabContent(
     }
 }
 
-@Composable
-fun GameRoundDetailsCard(
-    modifier: Modifier = Modifier,
-    round: Round
-) {
-    Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
-            Text(
-                text = stringResource(id = R.string.label_round, round.number),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = stringResource(id = R.string.label_dealer, round.dealer.name),
-                style = MaterialTheme.typography.body2
-            )
-            Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(id = R.string.label_player),
-                    style = MaterialTheme.typography.overline,
-                    textAlign = TextAlign.Left,
-                    modifier = Modifier.weight(4f)
-                )
-                Text(
-                    text = stringResource(id = R.string.label_score),
-                    style = MaterialTheme.typography.overline,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(2f)
-                )
-                Text(
-                    text = stringResource(id = R.string.label_bid),
-                    style = MaterialTheme.typography.overline,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(2f)
-                )
-                Text(
-                    text = stringResource(id = R.string.label_actual),
-                    style = MaterialTheme.typography.overline,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(2f)
-                )
-            }
-
-            round.playerBids.forEach {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = it.player.name,
-                        style = MaterialTheme.typography.subtitle2,
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier.weight(4f)
-                    )
-                    Text(
-                        text = it.score.toString(),
-                        style = MaterialTheme.typography.subtitle2,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(2f)
-                    )
-                    Text(
-                        text = it.bid.toString(),
-                        style = MaterialTheme.typography.subtitle2,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(2f)
-                    )
-                    Text(
-                        text = it.actual.toString(),
-                        style = MaterialTheme.typography.subtitle2,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(2f)
-                    )
-                }
-            }
-        }
-    }
-}
 //endregion
 
 //region Previews
@@ -465,22 +394,7 @@ fun DefaultPreview() {
 fun GameTabContentPreview() {
     WizardCompanionTheme {
         GameTabContent(
-            game = null
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GameRoundDetailsCardPreview() {
-    WizardCompanionTheme {
-        GameRoundDetailsCard(
-            round = Round(
-                id = 0,
-                number = 3,
-                dealer = Player(0, "Riley"),
-                playerBids = listOf()
-            )
+            uiState = UiState()
         )
     }
 }

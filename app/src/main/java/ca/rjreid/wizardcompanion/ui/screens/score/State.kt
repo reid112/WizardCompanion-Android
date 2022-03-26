@@ -7,6 +7,7 @@ import java.util.*
 
 data class UiState(
     var forceUpdate: String = UUID.randomUUID().toString(),
+    var loading: Boolean = false,
     var hasDealt: Boolean = false,
     var isLastRound: Boolean = false,
     var roundNumber: Int = 1,

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.rjreid.wizardcompanion.data.WizardRepository
+import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -29,10 +30,10 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: UiEvent) {
         when (event) {
             is UiEvent.OnNewGameClicked -> {
-                sendAction(Action.Navigate(Screen.EnterPlayers.route))
+                sendAction(Action.Navigate(Routes.ENTER_PLAYERS.route))
             }
             is UiEvent.OnResumeGameClicked -> {
-                sendAction(Action.Navigate(Screen.Score.route))
+                sendAction(Action.Navigate(Routes.SCORE.route))
             }
         }
     }

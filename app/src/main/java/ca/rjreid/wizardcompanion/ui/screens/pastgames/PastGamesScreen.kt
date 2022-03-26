@@ -11,8 +11,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import ca.rjreid.wizardcompanion.ui.components.pastgameslist.PastGameListItem
-import ca.rjreid.wizardcompanion.ui.components.pastgameslist.PastGamesEmptyState
+import ca.rjreid.wizardcompanion.ui.components.PastGameListItem
+import ca.rjreid.wizardcompanion.ui.components.PastGamesEmptyState
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
 import kotlinx.coroutines.flow.collect
@@ -24,6 +24,7 @@ fun PastGamesScreen(
 ) {
     val listState = rememberLazyListState()
     val uiState = viewModel.uiState
+    val pastGames = uiState.pastGames
 
     LaunchedEffect(key1 = true) {
         viewModel.actions.collect { action ->
@@ -33,23 +34,28 @@ fun PastGamesScreen(
         }
     }
 
-    uiState.pastGames?.let {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            state = listState,
-            contentPadding = PaddingValues(MaterialTheme.spacing.medium)
-        ) {
-            items(items = it) { item ->
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
-                PastGameListItem(game = item, onClick = { viewModel.onEvent(UiEvent.OnGameClicked(it)) })
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
+    when {
+        uiState.noPastGames -> {
+            PastGamesEmptyState(
+                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            )
+        }
+        !pastGames.isNullOrEmpty() -> {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+                state = listState,
+                contentPadding = PaddingValues(MaterialTheme.spacing.medium)
+            ) {
+                items(items = pastGames) { item ->
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
+                    PastGameListItem(game = item, onClick = { viewModel.onEvent(UiEvent.OnGameClicked(it)) })
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
+                }
             }
         }
-    } ?: PastGamesEmptyState(
-        modifier = Modifier.padding(MaterialTheme.spacing.medium)
-    )
+    }
 }
 
 @Preview

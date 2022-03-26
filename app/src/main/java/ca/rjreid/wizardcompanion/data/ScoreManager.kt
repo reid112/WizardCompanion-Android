@@ -1,10 +1,7 @@
 package ca.rjreid.wizardcompanion.data
 
 import ca.rjreid.wizardcompanion.domain.mappers.*
-import ca.rjreid.wizardcompanion.domain.models.Game
-import ca.rjreid.wizardcompanion.domain.models.Player
-import ca.rjreid.wizardcompanion.domain.models.PlayerBid
-import ca.rjreid.wizardcompanion.domain.models.Round
+import ca.rjreid.wizardcompanion.domain.models.*
 import ca.rjreid.wizardcompanion.util.TOTAL_CARDS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -50,7 +47,7 @@ class ScoreManagerImpl @Inject constructor(
     }
 
     override suspend fun startNextRound(game: Game) {
-        val lastRound = game.rounds.last()
+        val lastRound = game.getLastRound()
         calculateRoundScore(lastRound)
 
         val playerBids = lastRound.playerBids.map {
@@ -74,17 +71,17 @@ class ScoreManagerImpl @Inject constructor(
         repository.startNewRound(
             rounds = game.rounds.map { it.toRoundDto(game.id) },
             currentBids = lastRound.playerBids.map { it.toPlayerBidDto(lastRound.id) },
-            newBids = game.rounds.last().playerBids.map { it.toPlayerBidDto(0) }
+            newBids = game.getLastRound().playerBids.map { it.toPlayerBidDto(0) }
         )
     }
 
     override suspend fun finishGame(game: Game) {
-        val lastRound = game.rounds.last()
+        val lastRound = game.getLastRound()
         calculateRoundScore(lastRound)
-        game.winner = game.rounds.last().playerBids.sortedBy { it.score }.last().player
+        game.winner = game.getLastRound().playerBids.sortedBy { it.score }.last().player
         repository.updateGame(game.toGameDto())
         repository.updateRounds(game.rounds.map { it.toRoundDto(game.id) })
-        repository.updatePlayerBids(game.rounds.last().playerBids.map { it.toPlayerBidDto(lastRound.id) })
+        repository.updatePlayerBids(game.getLastRound().playerBids.map { it.toPlayerBidDto(lastRound.id) })
     }
 
     override suspend fun updateGame(game: Game) {
@@ -99,7 +96,7 @@ class ScoreManagerImpl @Inject constructor(
     }
 
     private fun getNextDealer(game: Game): Player {
-        val currentDealer = game.rounds.last().dealer
+        val currentDealer = game.getLastRound().dealer
         val currentDealerIndex = game.players.indexOf(currentDealer)
         val nextDealerIndex = if (currentDealerIndex == game.players.lastIndex) {
             0

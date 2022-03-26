@@ -16,13 +16,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.Screen
 
 
 sealed class BottomNavItem(var title: Int, var icon: ImageVector, var route: String){
-    object Home : BottomNavItem(R.string.bottom_bar_home, Icons.Default.Home, Screen.Home.route)
-    object PastGames: BottomNavItem(R.string.bottom_bar_past_games, Icons.Default.DateRange, Screen.PastGames.route)
-    object Settings: BottomNavItem(R.string.bottom_bar_settings, Icons.Default.Settings, Screen.Settings.route)
+    object Home : BottomNavItem(R.string.bottom_bar_home, Icons.Default.Home, Routes.HOME.route)
+    object PastGames: BottomNavItem(R.string.bottom_bar_past_games, Icons.Default.DateRange, Routes.PAST_GAMES.route)
+    object Settings: BottomNavItem(R.string.bottom_bar_settings, Icons.Default.Settings, Routes.SETTINGS.route)
 }
 
 @Composable
@@ -38,10 +39,10 @@ fun BottomNavBar(modifier: Modifier = Modifier, navController: NavController) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     bottomBarState = when (currentRoute) {
-        Screen.EnterPlayers.route,
-        Screen.Score.route,
-        Screen.GameDetails.route -> false
-        else -> true
+        Routes.HOME.route,
+        Routes.PAST_GAMES.route,
+        Routes.SETTINGS.route -> true
+        else -> false
     }
 
     if (bottomBarState) {

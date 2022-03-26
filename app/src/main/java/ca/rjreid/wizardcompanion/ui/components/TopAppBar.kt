@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.Screen
 
 @Composable
@@ -28,6 +29,7 @@ fun TopAppBar(navController: NavController) {
             elevation = 0.dp
         }
         Screen.GameDetails.route -> currentTitle = stringResource(id = R.string.screen_title_game_details)
+        else -> currentTitle = stringResource(id = R.string.app_name)
     }
 
     TopAppBar(

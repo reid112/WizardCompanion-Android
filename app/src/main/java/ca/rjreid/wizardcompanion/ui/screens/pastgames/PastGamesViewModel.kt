@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.rjreid.wizardcompanion.data.WizardRepository
 import ca.rjreid.wizardcompanion.domain.mappers.toGame
+import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -37,8 +38,7 @@ class PastGamesViewModel @Inject constructor(
     fun onEvent(event: UiEvent) {
         when (event) {
             is UiEvent.OnGameClicked -> {
-                // how to pass params to route?
-                sendAction(Action.Navigate(Screen.GameDetails.route))
+                sendAction(Action.Navigate("${Routes.GAME_DETAILS.route}/${event.gameId}"))
             }
         }
     }
@@ -48,7 +48,19 @@ class PastGamesViewModel @Inject constructor(
     private fun loadPastGames() {
         viewModelScope.launch {
             repository.getPastGamesWithDetails().collect { gamesWithPlayersAndRounds ->
-                uiState = uiState.copy(pastGames = gamesWithPlayersAndRounds.map { it.toGame() })
+                val noPastGames = gamesWithPlayersAndRounds.isEmpty()
+                val pastGames = if (noPastGames) {
+                    null
+                } else {
+                    gamesWithPlayersAndRounds
+                        .map { it.toGame() }
+                        .sortedByDescending { it.date }
+                }
+
+                uiState = uiState.copy(
+                    noPastGames = noPastGames,
+                    pastGames = pastGames
+                )
             }
         }
     }

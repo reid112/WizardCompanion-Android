@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import ca.rjreid.wizardcompanion.data.ScoreManager
 import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Round
+import ca.rjreid.wizardcompanion.domain.models.getLastRound
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -34,30 +36,7 @@ class ScoreViewModel @Inject constructor(
 
     //region Init
     init {
-        viewModelScope.launch {
-            scoreManager.getGameDetails().collect {
-                game = it
-                currentRound = game.rounds.last()
-
-                val currentDealerIndex = currentRound.playerBids.indexOfFirst { playerBid -> playerBid.player == currentRound.dealer }
-                val rotate = currentRound.playerBids.size - currentDealerIndex - 1
-
-                Collections.rotate(currentRound.playerBids, rotate)
-
-                val isLastRound = currentRound.number == scoreManager.getTotalRounds(game)
-
-                uiState = uiState.copy(
-                    forceUpdate = UUID.randomUUID().toString(),
-                    hasDealt = hasDealt,
-                    roundNumber = currentRound.number,
-                    dealer = currentRound.dealer.name,
-                    bids = currentRound.playerBids,
-                    isLastRound = isLastRound,
-                    winner = game.winner,
-                    gameSummary = game
-                )
-            }
-        }
+        getGameDetails()
     }
     //endregion
 
@@ -121,6 +100,35 @@ class ScoreViewModel @Inject constructor(
     //endregion
 
     //region Helpers
+    private fun getGameDetails() {
+        viewModelScope.launch {
+            scoreManager.getGameDetails().collect {
+                game = it
+                currentRound = game.getLastRound()
+
+                game.rounds = game.rounds.sortedByDescending { round -> round.number }
+
+                val currentDealerIndex = currentRound.playerBids.indexOfFirst { playerBid -> playerBid.player == currentRound.dealer }
+                val rotate = currentRound.playerBids.size - currentDealerIndex - 1
+
+                Collections.rotate(currentRound.playerBids, rotate)
+
+                val isLastRound = currentRound.number == scoreManager.getTotalRounds(game)
+
+                uiState = uiState.copy(
+                    forceUpdate = UUID.randomUUID().toString(),
+                    hasDealt = hasDealt,
+                    roundNumber = currentRound.number,
+                    dealer = currentRound.dealer.name,
+                    bids = currentRound.playerBids,
+                    isLastRound = isLastRound,
+                    winner = game.winner,
+                    gameSummary = game
+                )
+            }
+        }
+    }
+
     private fun updatePlayerBidsUiState() {
         val nextRoundButtonEnabled = currentRound.playerBids.sumOf { it.actual } == currentRound.number
         uiState = uiState.copy(

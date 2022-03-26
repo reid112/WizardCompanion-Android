@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import ca.rjreid.wizardcompanion.data.ScoreManager
 import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
 import ca.rjreid.wizardcompanion.util.MIN_PLAYER_COUNT
+import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -69,7 +70,7 @@ class EnterPlayerNamesViewModel @Inject constructor(
         viewModelScope.launch {
             scoreManager.startNewGame(uiState.players)
             sendAction(Action.PopBackStack)
-            sendAction(Action.Navigate(Screen.Score.route))
+            sendAction(Action.Navigate(Routes.SCORE.route))
         }
     }
 

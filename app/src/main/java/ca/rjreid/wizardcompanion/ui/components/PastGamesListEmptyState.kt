@@ -1,4 +1,4 @@
-package ca.rjreid.wizardcompanion.ui.components.pastgameslist
+package ca.rjreid.wizardcompanion.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

@@ -9,3 +9,5 @@ data class Game(
     var rounds: List<Round>,
     var winner: Player? = null
 )
+
+fun Game.getLastRound() = rounds.maxByOrNull { round -> round.number } ?: rounds.last()
