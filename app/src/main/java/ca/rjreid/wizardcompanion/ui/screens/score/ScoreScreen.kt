@@ -19,14 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
-import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
-import ca.rjreid.wizardcompanion.domain.models.Round
 import ca.rjreid.wizardcompanion.ui.components.GameRoundDetailsCard
 import ca.rjreid.wizardcompanion.ui.components.SeparatorDot
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
+import ca.rjreid.wizardcompanion.util.player1
+import ca.rjreid.wizardcompanion.util.playerBids
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -373,8 +373,6 @@ fun GameTabContent(
         }
     }
 }
-
-
 //endregion
 
 //region Previews
@@ -404,7 +402,10 @@ fun GameTabContentPreview() {
 fun RoundSummaryCardPreview() {
     WizardCompanionTheme {
         RoundSummaryCard(
-            uiState = UiState(),
+            uiState = UiState(
+                dealer = player1.name,
+                bids = playerBids,
+            ),
             onAddBidClicked = { },
             onAddActualClicked = { },
             onRemoveBidClicked = { },

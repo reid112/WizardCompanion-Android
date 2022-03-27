@@ -12,10 +12,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import ca.rjreid.wizardcompanion.R
-import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.Round
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
+import ca.rjreid.wizardcompanion.util.player1
+import ca.rjreid.wizardcompanion.util.playerBids
 
 @Composable
 fun GameRoundDetailsCard(
@@ -64,6 +65,8 @@ fun GameRoundDetailsCard(
                     modifier = Modifier.weight(2f)
                 )
             }
+            
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
             round.playerBids.forEach {
                 Row(
@@ -109,8 +112,8 @@ fun GameRoundDetailsCardPreview() {
             round = Round(
                 id = 0,
                 number = 3,
-                dealer = Player(0, "Riley"),
-                playerBids = listOf()
+                dealer = player1,
+                playerBids = playerBids
             )
         )
     }
