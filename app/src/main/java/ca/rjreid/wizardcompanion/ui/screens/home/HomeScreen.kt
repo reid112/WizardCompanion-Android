@@ -1,5 +1,6 @@
 package ca.rjreid.wizardcompanion.ui.screens.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -8,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,6 +67,10 @@ fun HomeScreen(
             .padding(horizontal = MaterialTheme.spacing.small)
             .verticalScroll(state = scrollState),
     ) {
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+        Image(painter = painterResource(id = R.drawable.ic_logo), contentDescription = stringResource(
+            id = R.string.app_name
+        ))
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         if (uiState.resumeGameCardVisible) {
             ResumeGameCard(modifier = Modifier.fillMaxWidth()) {
