@@ -1,14 +1,23 @@
 package ca.rjreid.wizardcompanion.data
 
 import ca.rjreid.wizardcompanion.data.dao.GameDao
+import ca.rjreid.wizardcompanion.data.models.ThemeSetting
 import ca.rjreid.wizardcompanion.data.models.entities.*
 import ca.rjreid.wizardcompanion.data.models.entities.relations.GameWithPlayersAndRounds
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 
 interface WizardRepository {
+    fun getThemeSetting(): Flow<ThemeSetting>
+    suspend fun setThemeSetting(theme: ThemeSetting)
+    fun getKeepScreenOnSetting(): Flow<Boolean>
+    suspend fun setKeepScreenOnSetting(keepScreenOn: Boolean)
+
     fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?>
     fun getPastGamesWithDetails(): Flow<List<GameWithPlayersAndRounds>>
     fun getInProgressGame(): Flow<GameWithPlayersAndRounds?>
+
     suspend fun startNameGame(players: List<PlayerDto>): Long
     suspend fun startNewRound(rounds: List<RoundDto>, currentBids: List<PlayerBidDto>, newBids: List<PlayerBidDto>)
     suspend fun updateGame(game: GameDto)
@@ -18,8 +27,30 @@ interface WizardRepository {
 }
 
 class WizardRepositoryImpl(
+    private val wizardSettings: WizardSettings,
     private val gameDao: GameDao,
 ) : WizardRepository {
+    override fun getThemeSetting(): Flow<ThemeSetting> {
+        return wizardSettings
+            .getThemePref()
+            .filterNotNull()
+            .map { ThemeSetting.fromInt(it) ?: ThemeSetting.SYSTEM }
+    }
+
+    override suspend fun setThemeSetting(theme: ThemeSetting) {
+        wizardSettings.setThemePref(theme)
+    }
+
+    override fun getKeepScreenOnSetting(): Flow<Boolean> {
+        return wizardSettings
+            .getKeepScreenOnPref()
+            .filterNotNull()
+    }
+
+    override suspend fun setKeepScreenOnSetting(keepScreenOn: Boolean) {
+        wizardSettings.setKeepScreenOnPref(keepScreenOn)
+    }
+
     override fun getGameWithDetails(gameId: Long): Flow<GameWithPlayersAndRounds?> {
         return gameDao.getGameById(gameId)
     }

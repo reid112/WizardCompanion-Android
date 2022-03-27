@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +21,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
+import ca.rjreid.wizardcompanion.data.WizardRepository
+import ca.rjreid.wizardcompanion.data.models.ThemeSetting
 import ca.rjreid.wizardcompanion.ui.components.BottomNavBar
 import ca.rjreid.wizardcompanion.ui.components.NavigationGraph
 import ca.rjreid.wizardcompanion.ui.components.TopAppBar
@@ -27,16 +31,27 @@ import ca.rjreid.wizardcompanion.util.BOTTOM_BAR_HEIGHT
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject lateinit var repository: WizardRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WizardCompanionTheme {
+            val theme = repository.getThemeSetting().collectAsState(initial = ThemeSetting.SYSTEM)
+
+            val isDarkMode = when (theme.value) {
+                ThemeSetting.LIGHT -> false
+                ThemeSetting.DARK -> true
+                ThemeSetting.SYSTEM -> isSystemInDarkTheme()
+            }
+
+            WizardCompanionTheme(darkTheme = isDarkMode) {
                 App()
             }
         }
