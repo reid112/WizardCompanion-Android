@@ -19,7 +19,7 @@ fun ResumeGameCard(
     onResumeGameClick: () -> Unit
 ) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
                 text = stringResource(id = R.string.label_resume_game),
                 style = MaterialTheme.typography.h6

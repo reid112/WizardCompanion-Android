@@ -20,7 +20,7 @@ fun PlayNowCard(
     onPlayNowClick: () -> Unit
 ) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
                 text = stringResource(id = R.string.label_play_now),
                 style = MaterialTheme.typography.h6
