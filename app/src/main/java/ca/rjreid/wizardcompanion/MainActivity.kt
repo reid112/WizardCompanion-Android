@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
             }
 
             WizardCompanionTheme(darkTheme = isDarkMode) {
-                App()
+                App(isDarkMode)
             }
         }
     }
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
-fun App() {
+fun App(isDarkMode: Boolean = false) {
     val bottomBarHeight = BOTTOM_BAR_HEIGHT
     val bottomBarHeightPx = with(LocalDensity.current) { bottomBarHeight.roundToPx().toFloat() }
     val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
@@ -103,7 +103,8 @@ fun App() {
                             y = -bottomBarOffsetHeightPx.value.roundToInt()
                         )
                     },
-                navController = navController
+                navController = navController,
+                isDarkMode = isDarkMode
             )
         }
     ) {

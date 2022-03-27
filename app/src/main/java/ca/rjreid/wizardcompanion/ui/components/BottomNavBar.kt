@@ -1,21 +1,20 @@
 package ca.rjreid.wizardcompanion.ui.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.data.models.ThemeSetting
 import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.Screen
 
@@ -27,7 +26,7 @@ sealed class BottomNavItem(var title: Int, var icon: ImageVector, var route: Str
 }
 
 @Composable
-fun BottomNavBar(modifier: Modifier = Modifier, navController: NavController) {
+fun BottomNavBar(modifier: Modifier = Modifier, navController: NavController, isDarkMode: Boolean) {
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.PastGames,
@@ -37,6 +36,12 @@ fun BottomNavBar(modifier: Modifier = Modifier, navController: NavController) {
     var bottomBarState by rememberSaveable { (mutableStateOf(true)) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val selectedContentColor =
+        if (isDarkMode)
+            MaterialTheme.colors.secondary
+        else
+            MaterialTheme.colors.primary
+
 
     bottomBarState = when (currentRoute) {
         Routes.HOME.route,
@@ -60,7 +65,7 @@ fun BottomNavBar(modifier: Modifier = Modifier, navController: NavController) {
                         )
                     },
                     label = { Text(text = stringResource(id = item.title)) },
-                    selectedContentColor = MaterialTheme.colors.primary,
+                    selectedContentColor = selectedContentColor,
                     unselectedContentColor = MaterialTheme.colors.onSurface,
                     alwaysShowLabel = true,
                     selected = currentRoute == item.route,
