@@ -48,6 +48,7 @@
     <string name="content_description_dot">Dot Icon</string>
     <string name="content_description_add">Add Icon</string>
     <string name="content_description_subtract">Subtract Icon</string>
+    <string name="content_description_back">Back Icon</string>
 
     <string name="button_new_game">New Game</string>
     <string name="button_resume_game">Resume Game</string>
