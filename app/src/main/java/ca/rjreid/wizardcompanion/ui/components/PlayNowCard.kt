@@ -20,7 +20,7 @@ fun PlayNowCard(
     onPlayNowClick: () -> Unit
 ) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Text(
                 text = stringResource(id = R.string.label_play_now),
                 style = MaterialTheme.typography.h6
@@ -29,7 +29,7 @@ fun PlayNowCard(
                 text = stringResource(id = R.string.label_start_game),
                 style = MaterialTheme.typography.body2
             )
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onPlayNowClick() }

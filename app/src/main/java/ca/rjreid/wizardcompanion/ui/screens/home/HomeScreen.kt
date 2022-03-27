@@ -62,20 +62,20 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = MaterialTheme.spacing.medium)
+            .padding(horizontal = MaterialTheme.spacing.small)
             .verticalScroll(state = scrollState),
     ) {
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         if (uiState.resumeGameCardVisible) {
             ResumeGameCard(modifier = Modifier.fillMaxWidth()) {
                 viewModel.onEvent(UiEvent.OnResumeGameClicked)
             }
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         }
         PlayNowCard(modifier = Modifier.fillMaxWidth()) {
             viewModel.onEvent(UiEvent.OnNewGameClicked)
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
     }
 }
 //endregion

@@ -35,7 +35,7 @@ fun PastGameListItem(
     Card(modifier
         .fillMaxWidth()
         .clickable { onClick(game.id) }) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Text(
                 text = date,
                 style = MaterialTheme.typography.overline

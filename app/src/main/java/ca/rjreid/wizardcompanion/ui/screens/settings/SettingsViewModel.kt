@@ -29,24 +29,24 @@ class SettingsViewModel @Inject constructor(
     //endregion
 
     //region Public
-    fun toggleTheme() {
-        viewModelScope.launch {
-            val currentValue = uiState.theme.value
-            var nextValue = 0
-
-            if (currentValue < 3) {
-                nextValue = currentValue + 1
-            } else {
-                nextValue = 1
+    fun onEvent(event: UiEvent) {
+        when (event) {
+            is UiEvent.OnChangeKeepScreenOn -> {
+                viewModelScope.launch {
+                    repository.setKeepScreenOnSetting(event.value)
+                }
             }
-
-            repository.setThemeSetting(ThemeSetting.fromInt(nextValue) ?: ThemeSetting.SYSTEM)
-        }
-    }
-
-    fun toggleScreen() {
-        viewModelScope.launch {
-            repository.setKeepScreenOnSetting(!uiState.keepScreenOn)
+            is UiEvent.OnChangeTheme -> {
+                viewModelScope.launch {
+                    repository.setThemeSetting(event.theme)
+                }
+            }
+            is UiEvent.OnThemeRowClicked -> {
+                uiState = uiState.copy(themeSelectionDialogVisible = true)
+            }
+            is UiEvent.OnDismissThemeSelection -> {
+                uiState = uiState.copy(themeSelectionDialogVisible = false)
+            }
         }
     }
     //endregion

@@ -56,14 +56,14 @@ fun EnterPlayerNamesScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = MaterialTheme.spacing.medium)
+            .padding(horizontal = MaterialTheme.spacing.small)
             .verticalScroll(state = scrollState),
     ) {
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(
                 modifier = Modifier
-                    .padding(MaterialTheme.spacing.medium)
+                    .padding(MaterialTheme.spacing.small)
             ) {
                 Text(
                     text = stringResource(id = R.string.label_add_player_names),
@@ -139,7 +139,7 @@ fun EnterPlayerNamesScreen(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
     }
 
 }

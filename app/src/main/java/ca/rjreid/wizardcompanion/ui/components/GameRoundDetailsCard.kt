@@ -24,7 +24,7 @@ fun GameRoundDetailsCard(
     round: Round
 ) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Text(
                 text = stringResource(id = R.string.label_round, round.number),
                 style = MaterialTheme.typography.h6
@@ -33,7 +33,7 @@ fun GameRoundDetailsCard(
                 text = stringResource(id = R.string.label_dealer, round.dealer.name),
                 style = MaterialTheme.typography.body2
             )
-            Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
+            Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -19,7 +19,7 @@ fun ResumeGameCard(
     onResumeGameClick: () -> Unit
 ) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Text(
                 text = stringResource(id = R.string.label_resume_game),
                 style = MaterialTheme.typography.h6
@@ -28,7 +28,7 @@ fun ResumeGameCard(
                 text = stringResource(id = R.string.label_game_in_progress),
                 style = MaterialTheme.typography.body2
             )
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onResumeGameClick() }

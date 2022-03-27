@@ -16,7 +16,7 @@ import ca.rjreid.wizardcompanion.ui.theme.spacing
 @Composable
 fun PastGamesEmptyState(modifier: Modifier = Modifier) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.large)) {
             Text(
                 text = stringResource(id = R.string.label_past_games_empty_state),
                 style = MaterialTheme.typography.body1

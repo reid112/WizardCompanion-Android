@@ -37,7 +37,7 @@ fun PastGamesScreen(
     when {
         uiState.noPastGames -> {
             PastGamesEmptyState(
-                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                modifier = Modifier.padding(MaterialTheme.spacing.small)
             )
         }
         !pastGames.isNullOrEmpty() -> {
@@ -46,7 +46,7 @@ fun PastGamesScreen(
                     .fillMaxSize()
                     .background(MaterialTheme.colors.background),
                 state = listState,
-                contentPadding = PaddingValues(MaterialTheme.spacing.medium)
+                contentPadding = PaddingValues(MaterialTheme.spacing.small)
             ) {
                 items(items = pastGames) { item ->
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))

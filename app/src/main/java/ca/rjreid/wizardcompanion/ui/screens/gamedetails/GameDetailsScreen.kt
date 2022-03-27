@@ -50,12 +50,12 @@ fun GameDetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colors.background)
-                    .padding(horizontal = MaterialTheme.spacing.medium)
+                    .padding(horizontal = MaterialTheme.spacing.small)
                     .verticalScroll(state = scrollState),
             ) {
                 // TODO: Add a winner card here
                 game.rounds.forEach {
-                    GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.medium), round = it)
+                    GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.small), round = it)
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
             }

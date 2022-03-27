@@ -149,10 +149,10 @@ fun RoundTabContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = MaterialTheme.spacing.medium)
+            .padding(horizontal = MaterialTheme.spacing.small)
             .verticalScroll(state = scrollState),
     ) {
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
         val winner = uiState.winner
         if (winner != null) {
@@ -182,7 +182,7 @@ fun WinnerCard(
     onEndGameClicked: () -> Unit
 ) {
     Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Text(
                 text = stringResource(id = R.string.label_game_over),
                 style = MaterialTheme.typography.h6
@@ -191,7 +191,7 @@ fun WinnerCard(
                 text = stringResource(id = R.string.label_winner, winner.name),
                 style = MaterialTheme.typography.body2
             )
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onEndGameClicked() }
@@ -220,13 +220,13 @@ fun RoundSummaryCard(
     Card(modifier) {
         if (uiState.loading) {
             Box(
-                modifier = Modifier.padding(MaterialTheme.spacing.medium),
+                modifier = Modifier.padding(MaterialTheme.spacing.small),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
         } else {
-            Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+            Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
                 Text(
                     text = stringResource(id = R.string.label_round, uiState.roundNumber),
                     style = MaterialTheme.typography.h6
@@ -235,7 +235,7 @@ fun RoundSummaryCard(
                     text = stringResource(id = R.string.label_dealer, uiState.dealer),
                     style = MaterialTheme.typography.body2
                 )
-                Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
+                Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
 
                 uiState.bids.forEach { playerBid->
                     Row(
@@ -317,7 +317,7 @@ fun RoundSummaryCard(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
                 var callback = onDealClicked
                 var buttonText = stringResource(id = R.string.button_deal)
@@ -360,14 +360,14 @@ fun GameTabContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = MaterialTheme.spacing.medium)
+            .padding(horizontal = MaterialTheme.spacing.small)
             .verticalScroll(state = scrollState),
     ) {
         if (game == null) {
             Text("Game is null... what??!!!?")
         } else {
             game.rounds.forEach {
-                GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.medium), round = it)
+                GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.small), round = it)
             }
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
         }

@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
 import ca.rjreid.wizardcompanion.data.models.ThemeSetting
+import ca.rjreid.wizardcompanion.ui.components.SingleSelectDialog
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
 
@@ -21,18 +22,39 @@ fun SettingsScreen(
 ) {
     val uiState = viewModel.uiState
 
-    SettingsCard(uiState, viewModel::toggleScreen)
+    SettingsCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.small),
+        state = uiState,
+        onThemeRowClicked = { viewModel.onEvent(UiEvent.OnThemeRowClicked) },
+        onChangeTheme = { viewModel.onEvent(UiEvent.OnChangeTheme(it)) },
+        onToggleScreen = { viewModel.onEvent(UiEvent.OnChangeKeepScreenOn(it)) },
+        onDismissThemeSelection = { viewModel.onEvent(UiEvent.OnDismissThemeSelection)}
+    )
 }
 
 @Composable
 fun SettingsCard(
+    modifier: Modifier = Modifier,
     state: UiState,
     onThemeRowClicked: () -> Unit = {},
     onChangeTheme: (ThemeSetting) -> Unit = {},
-    onToggleScreen: () -> Unit = {}
+    onToggleScreen: (Boolean) -> Unit = {},
+    onDismissThemeSelection: () -> Unit = {}
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+    if (state.themeSelectionDialogVisible) {
+        SingleSelectDialog(title = stringResource(R.string.dialog_choose_theme_title),
+            optionsList = ThemeSetting.values().map { stringResource(it.stringResId) },
+            defaultSelected = state.theme.value,
+            onOptionSelected = {
+                onChangeTheme(ThemeSetting.fromInt(it) ?: ThemeSetting.SYSTEM)
+            },
+            onDismissRequest = { onDismissThemeSelection() })
+    }
+
+    Card(modifier = modifier) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -49,14 +71,16 @@ fun SettingsCard(
             }
             Divider()
             Row(
-                modifier = Modifier.fillMaxWidth().height(MaterialTheme.spacing.extraLarge),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(MaterialTheme.spacing.extraLarge),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = stringResource(R.string.setting_keep_screen_on))
                 Switch(
                     checked = state.keepScreenOn,
-                    onCheckedChange = { onToggleScreen() }
+                    onCheckedChange = { onToggleScreen(it) }
                 )
             }
         }
