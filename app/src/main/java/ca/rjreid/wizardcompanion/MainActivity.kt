@@ -1,6 +1,7 @@
 package ca.rjreid.wizardcompanion
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -44,6 +45,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val theme = repository.getThemeSetting().collectAsState(initial = ThemeSetting.SYSTEM)
+            val keepScreenOnSetting = repository.getKeepScreenOnSetting().collectAsState(initial = true)
+
+            if (keepScreenOnSetting.value) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+
 
             val isDarkMode = when (theme.value) {
                 ThemeSetting.LIGHT -> false

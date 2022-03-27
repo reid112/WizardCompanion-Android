@@ -33,6 +33,7 @@
     <string name="label_bid">Bid</string>
     <string name="label_actual">Actual</string>
     <string name="label_past_games_empty_state">You current have not finished any games. Any games that you complete will show up here.</string>
+    <string name="label_version_number">Version: %1$s</string>
 
     <string name="error_generic">Oops. Something went wrong.  Please try again.</string>
 
