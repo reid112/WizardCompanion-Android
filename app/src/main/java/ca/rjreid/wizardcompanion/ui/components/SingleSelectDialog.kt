@@ -36,18 +36,24 @@ fun SingleSelectDialog(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 LazyColumn(state = listState) {
                     itemsIndexed(items = optionsList) { index, item ->
+                        val clickHandler = {
+                            with(index) {
+                                selectedOption = this
+                                onOptionSelected(this)
+                            }
+                        }
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    selectedOption = index
-                                    selectedOption?.let {
-                                        onOptionSelected(it)
-                                    }
+                                    clickHandler()
                                 },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            RadioButton(selected = index == selectedOption, onClick = {})
+                            RadioButton(selected = index == selectedOption, onClick = {
+                                clickHandler()
+                            })
                             Text(
                                 text = item,
                                 style = MaterialTheme.typography.body1.merge(),
