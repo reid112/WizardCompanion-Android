@@ -24,6 +24,9 @@
     <string name="label_enter_player_names">Enter the player names in order of play.</string>
     <string name="label_round">Round %1$d</string>
     <string name="label_dealer">Dealer: %1$s</string>
+    <string name="label_round_dealer">Round %1$d | Dealer: %2$s</string>
+    <string name="label_pre_round_bidding">Pre-Round Bidding</string>
+    <string name="label_post_round_scoring">Post-Round Scoring</string>
     <string name="label_game_over">Game Over</string>
     <string name="label_winner">Winner: %1$s</string>
     <string name="label_unknown">Unknown</string>
@@ -34,6 +37,7 @@
     <string name="label_actual">Actual</string>
     <string name="label_past_games_empty_state">You current have not finished any games. Any games that you complete will show up here.</string>
     <string name="label_version_number">Version: %1$s</string>
+    <string name="label_game_summary">Game Summary</string>
 
     <string name="error_generic">Oops. Something went wrong.  Please try again.</string>
 
@@ -60,6 +64,7 @@
     <string name="button_next_round">Next Round</string>
     <string name="button_finish_game">Finish Game</string>
     <string name="button_end_game">End Game</string>
+    <string name="button_game_details">Game Details</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
 

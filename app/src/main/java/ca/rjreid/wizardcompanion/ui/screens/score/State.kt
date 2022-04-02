@@ -16,11 +16,12 @@ data class UiState(
     var nextRoundButtonEnabled: Boolean = false,
     var winner: Player? = null,
     var gameSummary: Game? = null,
-    var leaveDialogVisible: Boolean = false,
+    var leaveDialogVisible: Boolean = false
 )
 
 sealed class Action {
     object PopBackStack: Action()
+    object ShowGameTab: Action()
 }
 
 sealed class UiEvent {
@@ -32,6 +33,7 @@ sealed class UiEvent {
     object OnNextRoundClicked: UiEvent()
     object OnFinishGameClicked: UiEvent()
     object OnEndGameClicked: UiEvent()
+    object OnGoToGameDetailsClicked: UiEvent()
     object OnBackPressed: UiEvent()
     object OnLeaveDialogCancel: UiEvent()
     object OnLeaveDialogConfirm: UiEvent()
