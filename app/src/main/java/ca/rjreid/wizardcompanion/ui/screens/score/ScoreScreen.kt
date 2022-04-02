@@ -1,10 +1,8 @@
 package ca.rjreid.wizardcompanion.ui.screens.score
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -17,14 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.domain.models.Player
 import ca.rjreid.wizardcompanion.domain.models.PlayerBid
 import ca.rjreid.wizardcompanion.ui.components.GameRoundDetailsCard
 import ca.rjreid.wizardcompanion.ui.components.SeparatorDot
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
+import ca.rjreid.wizardcompanion.util.game1
 import ca.rjreid.wizardcompanion.util.player1
 import ca.rjreid.wizardcompanion.util.playerBids
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -42,21 +43,21 @@ fun ScoreScreen(
     popBackStack: () -> Unit
 ) {
     val uiState = viewModel.uiState
-
-    LaunchedEffect(key1 = true) {
-        viewModel.actions.collect { action ->
-            when(action) {
-                is Action.PopBackStack -> popBackStack()
-            }
-        }
-    }
-
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
     val tabs = listOf(
         stringResource(id = R.string.tab_title_round),
         stringResource(id = R.string.tab_title_game)
     )
+
+    LaunchedEffect(key1 = true) {
+        viewModel.actions.collect { action ->
+            when(action) {
+                is Action.PopBackStack -> popBackStack()
+                is Action.ShowGameTab -> pagerState.scrollToPage(1)
+            }
+        }
+    }
 
     BackHandler {
         viewModel.onEvent(UiEvent.OnBackPressed)
@@ -84,7 +85,7 @@ fun ScoreScreen(
         )
     }
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
@@ -110,6 +111,7 @@ fun ScoreScreen(
             }
         }
         HorizontalPager(
+            modifier = Modifier.fillMaxSize(),
             count = tabs.size,
             state = pagerState,
         ) { tabIndex ->
@@ -123,7 +125,8 @@ fun ScoreScreen(
                     onDealClicked = { viewModel.onEvent(UiEvent.OnDealClicked) },
                     onNextRoundClicked = { viewModel.onEvent(UiEvent.OnNextRoundClicked) },
                     onFinishGameClicked = { viewModel.onEvent(UiEvent.OnFinishGameClicked) },
-                    onEndGameClicked = { viewModel.onEvent(UiEvent.OnEndGameClicked) }
+                    onEndGameClicked = { viewModel.onEvent(UiEvent.OnEndGameClicked) },
+                    onGoToGameDetailsClicked = { viewModel.onEvent(UiEvent.OnGoToGameDetailsClicked) }
                 )
                 1 -> GameTabContent(uiState)
             }
@@ -141,7 +144,8 @@ fun RoundTabContent(
     onDealClicked: () -> Unit,
     onNextRoundClicked: () -> Unit,
     onFinishGameClicked: () -> Unit,
-    onEndGameClicked: () -> Unit
+    onEndGameClicked: () -> Unit,
+    onGoToGameDetailsClicked: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -154,11 +158,15 @@ fun RoundTabContent(
     ) {
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
+        val game = uiState.gameSummary
         val winner = uiState.winner
-        if (winner != null) {
+        if (game != null && winner != null) {
             WinnerCard(
+                game = game,
                 winner = winner,
-                onEndGameClicked = onEndGameClicked
+                title = stringResource(id = R.string.label_game_over),
+                onEndGameClicked = onEndGameClicked,
+                onGoToGameDetailsClicked = onGoToGameDetailsClicked
             )
         } else {
             RoundSummaryCard(
@@ -178,28 +186,52 @@ fun RoundTabContent(
 @Composable
 fun WinnerCard(
     modifier: Modifier = Modifier,
+    game: Game,
     winner: Player,
-    onEndGameClicked: () -> Unit
+    title: String,
+    outline: Boolean = false,
+    onGoToGameDetailsClicked: (() -> Unit)? = null,
+    onEndGameClicked: (() -> Unit)? = null
 ) {
-    Card(modifier) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
-            Text(
-                text = stringResource(id = R.string.label_game_over),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = stringResource(id = R.string.label_winner, winner.name),
-                style = MaterialTheme.typography.body2
-            )
+    Column(modifier = modifier) {
+        val m = if (outline)
+            Modifier.border(BorderStroke(2.dp, MaterialTheme.colors.secondary), shape = MaterialTheme.shapes.medium)
+        else
+            Modifier
+
+        GameRoundDetailsCard(
+            modifier = m,
+            round = game.rounds.last(),
+            title = title,
+            subtitle = stringResource(id = R.string.label_winner, winner.name)
+        )
+
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
+
+        Column(modifier = Modifier.fillMaxWidth()) {
+            onGoToGameDetailsClicked?.let {
+                OutlinedButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { it() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_game_details),
+                        style = MaterialTheme.typography.button
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onEndGameClicked() }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.button_end_game),
-                    style = MaterialTheme.typography.button
-                )
+            onEndGameClicked?.let {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { it() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_end_game),
+                        style = MaterialTheme.typography.button
+                    )
+                }
+
             }
         }
     }
@@ -227,12 +259,17 @@ fun RoundSummaryCard(
             }
         } else {
             Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
+                val cardTitle = if (uiState.hasDealt)
+                    stringResource(id = R.string.label_post_round_scoring)
+                else
+                    stringResource(id = R.string.label_pre_round_bidding)
+
                 Text(
-                    text = stringResource(id = R.string.label_round, uiState.roundNumber),
+                    text = cardTitle,
                     style = MaterialTheme.typography.h6
                 )
                 Text(
-                    text = stringResource(id = R.string.label_dealer, uiState.dealer),
+                    text = stringResource(id = R.string.label_round_dealer, uiState.roundNumber, uiState.dealer),
                     style = MaterialTheme.typography.body2
                 )
                 Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
@@ -367,7 +404,12 @@ fun GameTabContent(
             Text("Game is null... what??!!!?")
         } else {
             game.rounds.forEach {
-                GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.small), round = it)
+                GameRoundDetailsCard(
+                    modifier = Modifier.padding(top = MaterialTheme.spacing.small),
+                    round = it,
+                    title = stringResource(id = R.string.label_round, it.number),
+                    subtitle = stringResource(id = R.string.label_dealer, it.dealer.name)
+                )
             }
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
         }
@@ -413,6 +455,20 @@ fun RoundSummaryCardPreview() {
             onDealClicked = { },
             onNextRoundClicked = { },
             onFinishGameClicked = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WinnerCardPreview() {
+    WizardCompanionTheme {
+        WinnerCard(
+            game = game1,
+            winner = player1,
+            title = "Game Over",
+            onEndGameClicked = {},
+            onGoToGameDetailsClicked = {}
         )
     }
 }

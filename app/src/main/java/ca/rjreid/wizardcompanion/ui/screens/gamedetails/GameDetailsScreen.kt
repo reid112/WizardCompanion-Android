@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
 import ca.rjreid.wizardcompanion.ui.components.GameRoundDetailsCard
+import ca.rjreid.wizardcompanion.ui.screens.score.WinnerCard
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
 
@@ -53,9 +54,22 @@ fun GameDetailsScreen(
                     .padding(horizontal = MaterialTheme.spacing.small)
                     .verticalScroll(state = scrollState),
             ) {
-                // TODO: Add a winner card here
+                game.winner?.let {
+                    WinnerCard(
+                        modifier = Modifier.padding(top = MaterialTheme.spacing.small),
+                        game = game,
+                        winner = it,
+                        outline = true,
+                        title = stringResource(id = R.string.label_game_summary)
+                    )
+                }
                 game.rounds.forEach {
-                    GameRoundDetailsCard(modifier = Modifier.padding(top = MaterialTheme.spacing.small), round = it)
+                    GameRoundDetailsCard(
+                        modifier = Modifier.padding(top = MaterialTheme.spacing.small),
+                        round = it,
+                        title = stringResource(id = R.string.label_round, it.number),
+                        subtitle = stringResource(id = R.string.label_dealer, it.dealer.name)
+                    )
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
             }
