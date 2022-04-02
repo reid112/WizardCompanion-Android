@@ -56,11 +56,12 @@ fun EnterPlayerNamesScreen(
     if (uiState.chooseDealerDialogVisible) {
         SingleSelectDialog(title = stringResource(R.string.dialog_choose_dealer_title),
             optionsList = uiState.players,
-            defaultSelected = 0,
             onOptionSelected = {
                 viewModel.onEvent(UiEvent.OnDealerSelected(it))
             },
-            onDismissRequest = { })
+            onDismissRequest = {
+                viewModel.onEvent(UiEvent.OnDismissDealerDialog)
+            })
     }
 
     Column(
