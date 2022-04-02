@@ -93,6 +93,9 @@ class ScoreViewModel @Inject constructor(
             is UiEvent.OnEndGameClicked -> {
                 sendAction(Action.PopBackStack)
             }
+            is UiEvent.OnGoToGameDetailsClicked -> {
+                sendAction(Action.ShowGameTab)
+            }
             is UiEvent.OnBackPressed -> {
                 uiState = uiState.copy(leaveDialogVisible = true)
             }

@@ -21,16 +21,18 @@ import ca.rjreid.wizardcompanion.util.playerBids
 @Composable
 fun GameRoundDetailsCard(
     modifier: Modifier = Modifier,
-    round: Round
+    round: Round,
+    title: String,
+    subtitle: String
 ) {
     Card(modifier) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Text(
-                text = stringResource(id = R.string.label_round, round.number),
+                text = title,
                 style = MaterialTheme.typography.h6
             )
             Text(
-                text = stringResource(id = R.string.label_dealer, round.dealer.name),
+                text = subtitle,
                 style = MaterialTheme.typography.body2
             )
             Divider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
@@ -113,8 +115,10 @@ fun GameRoundDetailsCardPreview() {
                 id = 0,
                 number = 3,
                 dealer = player1,
-                playerBids = playerBids
-            )
+                playerBids = playerBids,
+            ),
+            title = "Round 3",
+            subtitle = "Dealer: Jim"
         )
     }
 }
