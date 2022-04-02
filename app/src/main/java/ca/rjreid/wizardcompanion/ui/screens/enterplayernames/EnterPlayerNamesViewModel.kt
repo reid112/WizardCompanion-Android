@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +48,16 @@ class EnterPlayerNamesViewModel @Inject constructor(
                 addEmptyPlayer()
             }
             is UiEvent.OnStartGameClick -> {
+                val players = uiState.players.filter { it.isNotBlank() }
+                uiState = uiState.copy(players = players, chooseDealerDialogVisible = true)
+            }
+            is UiEvent.OnDealerSelected -> {
+                reorderPlayers(event.index)
+                uiState = uiState.copy(chooseDealerDialogVisible = false)
                 startGame()
+            }
+            is UiEvent.OnDismissDealerDialog -> {
+                uiState = uiState.copy(chooseDealerDialogVisible = false)
             }
         }
     }
@@ -60,6 +70,15 @@ class EnterPlayerNamesViewModel @Inject constructor(
         uiState = uiState.copy(players = players)
 
         setStartGameButtonState()
+    }
+
+    private fun reorderPlayers(dealerIndex: Int) {
+        val players = uiState.players
+        val rotate = players.size - dealerIndex
+
+        Collections.rotate(players, rotate)
+
+        uiState = uiState.copy(players = players)
     }
 
     private fun setStartGameButtonState() {

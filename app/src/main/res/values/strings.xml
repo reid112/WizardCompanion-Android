@@ -21,7 +21,7 @@
     <string name="label_game_in_progress">It looks like you have a game in progress.  Would you like to resume this game?</string>
     <string name="label_rules">Rules</string>
     <string name="label_add_player_names">Add Player Names</string>
-    <string name="label_enter_player_names">Enter the dealers name first, and then enter the rest in order of play.</string>
+    <string name="label_enter_player_names">Enter the player names in order of play.</string>
     <string name="label_round">Round %1$d</string>
     <string name="label_dealer">Dealer: %1$s</string>
     <string name="label_game_over">Game Over</string>
@@ -42,6 +42,7 @@
     <string name="dialog_score_title">Are you sure?</string>
     <string name="dialog_score_text">Are you sure you want to go back? You will be able to resume this game from the home screen!</string>
     <string name="dialog_choose_theme_title">Choose Theme</string>
+    <string name="dialog_choose_dealer_title">Who is dealing first?</string>
 
     <string name="hint_player">Player %1$d</string>
 

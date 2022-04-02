@@ -1,17 +1,17 @@
 package ca.rjreid.wizardcompanion.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
@@ -22,7 +22,7 @@ import ca.rjreid.wizardcompanion.ui.theme.spacing
 fun SingleSelectDialog(
     title: String,
     optionsList: List<String>,
-    defaultSelected: Int,
+    defaultSelected: Int? = null,
     onOptionSelected: (Int) -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -35,10 +35,24 @@ fun SingleSelectDialog(
                 Text(text = title)
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 LazyColumn(state = listState) {
-                    items(items = optionsList) {
-                        RadioButton(it, optionsList[selectedOption]) { selectedValue ->
-                            selectedOption = optionsList.indexOf(selectedValue)
-                            onOptionSelected(selectedOption)
+                    itemsIndexed(items = optionsList) { index, item ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    selectedOption = index
+                                    selectedOption?.let {
+                                        onOptionSelected(it)
+                                    }
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(selected = index == selectedOption, onClick = {})
+                            Text(
+                                text = item,
+                                style = MaterialTheme.typography.body1.merge(),
+                                modifier = Modifier.padding(start = MaterialTheme.spacing.small)
+                            )
                         }
                     }
                 }

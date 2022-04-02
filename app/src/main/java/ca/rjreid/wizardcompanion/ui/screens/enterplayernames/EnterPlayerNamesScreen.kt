@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.rjreid.wizardcompanion.R
+import ca.rjreid.wizardcompanion.ui.components.SingleSelectDialog
 import ca.rjreid.wizardcompanion.ui.theme.WizardCompanionTheme
 import ca.rjreid.wizardcompanion.ui.theme.spacing
 import ca.rjreid.wizardcompanion.util.MAX_PLAYER_COUNT
@@ -50,6 +51,17 @@ fun EnterPlayerNamesScreen(
                 is Action.PopBackStack -> onPopBackStack()
             }
         }
+    }
+
+    if (uiState.chooseDealerDialogVisible) {
+        SingleSelectDialog(title = stringResource(R.string.dialog_choose_dealer_title),
+            optionsList = uiState.players,
+            onOptionSelected = {
+                viewModel.onEvent(UiEvent.OnDealerSelected(it))
+            },
+            onDismissRequest = {
+                viewModel.onEvent(UiEvent.OnDismissDealerDialog)
+            })
     }
 
     Column(
