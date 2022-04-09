@@ -7,7 +7,6 @@ import ca.rjreid.wizardcompanion.util.Routes
 import ca.rjreid.wizardcompanion.util.TestData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -28,18 +27,6 @@ class HomeViewModelTest {
 
     //region Mocks
     @Mock private lateinit var repository: WizardRepository
-    //endregion
-
-    //region Before/After
-    @Before
-    fun setup() {
-
-    }
-
-    @After
-    fun tearDown() {
-
-    }
     //endregion
 
     //region Tests
