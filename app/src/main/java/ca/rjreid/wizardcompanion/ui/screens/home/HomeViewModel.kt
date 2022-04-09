@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is UiEvent.OnNewGameClicked -> {
                 if (inProgressGame != null) {
-                    uiState = uiState.copy(startGameDialogVisible = false)
+                    uiState = uiState.copy(startGameDialogVisible = true)
                 } else {
                     sendAction(Action.Navigate(Routes.ENTER_PLAYERS.route))
                 }
