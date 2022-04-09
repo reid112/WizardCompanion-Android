@@ -135,7 +135,7 @@ class WizardRepositoryImpl(
             if (it.id > 0) {
                 gameDao.updatePlayerBid(it)
             } else {
-                gameDao.updatePlayerBid(it)
+                gameDao.insertPlayerBid(it)
             }
         }
     }
