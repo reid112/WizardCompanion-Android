@@ -5,12 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ca.rjreid.wizardcompanion.data.WizardRepository
 import ca.rjreid.wizardcompanion.domain.mappers.toGame
 import ca.rjreid.wizardcompanion.domain.models.Game
 import ca.rjreid.wizardcompanion.util.Routes
-import ca.rjreid.wizardcompanion.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
@@ -43,7 +41,7 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is UiEvent.OnNewGameClicked -> {
                 if (inProgressGame != null) {
-                    uiState = uiState.copy(startGameDialogVisible = false)
+                    uiState = uiState.copy(startGameDialogVisible = true)
                 } else {
                     sendAction(Action.Navigate(Routes.ENTER_PLAYERS.route))
                 }
