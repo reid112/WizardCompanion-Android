@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1060448402008",
+    "project_id": "wizard-companion",
+    "storage_bucket": "wizard-companion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060448402008:android:4f3cd9253f6829b221a82d",
+        "android_client_info": {
+          "package_name": "ca.rjreid.wizardcompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060448402008-cqgc36sg61vu2q0ks2e9ueatoouhtke2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWetVOym3j_NPk5i__ButPzpH4eXQi-jM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060448402008-cqgc36sg61vu2q0ks2e9ueatoouhtke2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
